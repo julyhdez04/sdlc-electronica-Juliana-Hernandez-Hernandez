@@ -1,5 +1,5 @@
 ## Semana 1
-#Ejercicio Lunes 13 
+# Ejercicio Lunes 13 
 Prompt: Explicame paso a paso como escribir mis propias funciones Reading para conversión de unidades, detección de umbral y serialización tomando como base este código (código proporcionado en la guía del estudiante).
 
 La IA propuso 7 ejemplos con variables explicitas explicadas desde 0. Acepté 2. Rechacé 5:
