@@ -45,4 +45,4 @@ def is_freezing(r: Reading) -> bool: #Define una función que reciba un Reading 
 
 def is_temperature(r: Reading) -> bool: #Define una función que reciba un Reading y devuelva True si el tipo de sensor es TEMPERATURE, y False en caso contrario.
     resultado = (r.sensor_type == SensorType.TEMPERATURE) #verifica si el tipo de sensor es TEMPERATURE
-    return resultado
+    return resultado 
