@@ -2,10 +2,10 @@
 ## Entrada 1
 Prompt: "Explicame paso a paso como escribir mis propias funciones Reading para conversión de unidades, detección de umbral y serialización tomando como base este código (código proporcionado en la guía del estudiante)".
 
-La IA propuso 7 ejemplos con variables explicitas explicadas desde 0. Acepté 2. Rechacé 5:
+La IA propuso 7 ejemplos con variables explicitas explicadas desde 0. Acepté 3. Rechacé 5:
 
 - def check_temperature_alert(r: Reading) -> bool:   Lo tomé como base para darme la idea de escribir mi código para una alerta de temperatura alta fue el código inicial y me sirvió para verificar a que se refería cada dato y función.
-- def check_low_temperature_alert(r: Reading) -> bool:  No lo tomé debido a que era similar que el de temperatura alta pero con diferente umbral.
+- def check_low_temperature_alert(r: Reading) -> bool:  Lo tomé para complementar el de tempertatura alta.
 - def check_humidity_alert(r: Reading) -> bool: Mostraba como hacer una lectura para detectar húmedad por arriba del umbral, no lo tomé por ser repetitivo con el de alerta de temperatura.
 - def check_humidity_alert(r: Reading) -> bool:   Mostraba como hacer una lectura para detectar húmedad por debajo del umbral, no lo tomé por ser repetitivo con el de alerta de temperatura.
 - def convert_to_kelvin(r: Reading) -> float: Lo tomé puesto que se me hizo fácil de comprender su estructura, se utilizó para convertir un valor a otro.
@@ -22,3 +22,15 @@ La IA propuso 5 tests. Acepté 1. Rechacé 4:
 - test_yellow_to_red_transition: Rechazada. Duplicaba la lógica del test ya hecho "test_complete_cycle".
 - test_cycle_counter_property: Rechazada. La IA asumió que la clase tenía un método con "@property" llamado .cycle_count, el código base de la FSM no proporciona esta propiedad, solo contiene la propiedad ".state".
 - test_automatic_timer_transition: Rechazada. La IA creyó que el semáforo funcionaba con lógica de tiempo real y utilizó "time.sleep", la clase FSM base es síncrona y solo se puede cambiar manualmente.
+
+## Entrada 3
+Prompt: "Implementa los tres primeros principios con el dominio de sensores en semana1/solid_srp_ocp_lsp.py siguiendo la guía: para cada principio incluye el ejemplo 'mal', el 'bien' y 2 tests unitarios en test_solid.py."
+
+La IA propuso una estructura completa con 6 tests. Acepté 4. Rechacé/Modifiqué 2:
+- test_srp_reader_responsibility: Aceptado. Validó correctamente la responsabilidad única de "SensorReader" al procesar de manera aislada los datos analógicos sin mezclarlos.
+- test_srp_logger_responsibility: Aceptado. Validó la responsabilidad de DataLogger al gestionar el almacenamiento en la memoria de los logs, manteniendolo así desacoplado del hardware.
+- test_ocp_console_alert_integration: Aceptado. Comprobó el principio Open/Close al validar el canal base de las alertas por consola sin alterar la lógica de detección inicial.
+- test_ocp_extended_email_strategy: Aceptado. Validó la flexibilidad de OCP al integrar el nuevo canal "EmailAlert" extendiendo el sistema sin modificar una sola línea del firmware del "AnomalyDetector" original.
+- test_Isp_temperature_interchangeability: Modificado. La IA propuso evaluar la sustitución mediante una función "process_sensor" que causaba problemas de alcance, modifiqué el test para invocar "get_data()" demostransdo su intercambiabilidad.
+- test_Isp_humidity_interchageability: Modificado. Al igual que el anterior, rechacé la función intermediaria propuesta por la IA y modifiqué el test para verificar de manera directa la consistencia del contrato frente a la clase base.
+
