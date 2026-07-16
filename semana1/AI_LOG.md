@@ -1,6 +1,6 @@
 # Semana 1
-## Ejercicio Lunes 13 
-Prompt: Explicame paso a paso como escribir mis propias funciones Reading para conversión de unidades, detección de umbral y serialización tomando como base este código (código proporcionado en la guía del estudiante).
+## Entrada 1
+Prompt: "Explicame paso a paso como escribir mis propias funciones Reading para conversión de unidades, detección de umbral y serialización tomando como base este código (código proporcionado en la guía del estudiante)".
 
 La IA propuso 7 ejemplos con variables explicitas explicadas desde 0. Acepté 2. Rechacé 5:
 
@@ -11,3 +11,14 @@ La IA propuso 7 ejemplos con variables explicitas explicadas desde 0. Acepté 2.
 - def convert_to_kelvin(r: Reading) -> float: Lo tomé puesto que se me hizo fácil de comprender su estructura, se utilizó para convertir un valor a otro.
 - def convert_to_fahrenheit(r: Reading) -> float: No lo tomé debido a que era similar a la conversión de celsius a kelvin.
 - def serialize_to_key_value(r: Reading) -> str: No lo tomé, únicamente me guié de este para escribir el código de serialización a formato CSV. Este código proporcionado para la IA realizaba una serialización de texto simple clave-valor.
+
+## Entrada 2
+Prompt: "Genera tests pytest para la clase TrafficLightFSM de mi semáforo"
+
+La IA propuso 5 tests. Acepté 1. Rechacé 4:
+
+- test_initial_state_is_red: Aceptado. Valida que el constructor configure el estado inicial correctamente sin modificar la clase.
+- test_invalid_state_transition: Rechazada. La IA intenta forzar un estado inválido utilizando un bloque que no se encuentra en el código base para verificar que surgiera un "ValueError", y el FSM no implementa el manejo de errores de estado debido a la protección que proporciona "_state".
+- test_yellow_to_red_transition: Rechazada. Duplicaba la lógica del test ya hecho "test_complete_cycle".
+- test_cycle_counter_property: Rechazada. La IA asumió que la clase tenía un método con "@property" llamado .cycle_count, el código base de la FSM no proporciona esta propiedad, solo contiene la propiedad ".state".
+- test_automatic_timer_transition: Rechazada. La IA creyó que el semáforo funcionaba con lógica de tiempo real y utilizó "time.sleep", la clase FSM base es síncrona y solo se puede cambiar manualmente.
