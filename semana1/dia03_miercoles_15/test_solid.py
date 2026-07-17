@@ -1,4 +1,4 @@
-from semana1.miercoles_15.solid_srp_ocp_lsp import (  # Importamos las dependencias locales del módulo de hoy
+from semana1.03.miercoles_15.solid_srp_ocp_lsp import (  # Importamos las dependencias locales del módulo de hoy
     SensorReader, DataLogger, SensorReading,
     ConsoleAlert, EmailAlert, AnomalyDetector,
     TemperatureSensor, HumiditySensor, process_sensor

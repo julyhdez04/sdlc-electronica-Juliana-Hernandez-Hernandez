@@ -1,4 +1,4 @@
-from semana1.jueves_16.solid_isp_dip import SensorReading, BasicTelemetrySensor, InMemoryRepository, DataProcessor
+from semana1.dia04_jueves_16.solid_isp_dip import SensorReading, BasicTelemetrySensor, InMemoryRepository, DataProcessor
 
 def test_basic_sensor_reading_isp() -> None:
     sensor = BasicTelemetrySensor(sensor_id="TEMP-01", value=24.5) # Instancia el sensor enfocado en lectura
