@@ -38,7 +38,7 @@ class AnomalyDetector:
 class ViolacionSRP_SensorManager:
     def __init__(self, sensor_id: str) -> None:
         self.sensor_id = sensor_id
-        self.logs = []
+        self.logs: list[str] = []
     
     def read_and_log(self, raw_value: float) -> None:
         # Forzamos la ejecución de la lógica en dos pasos explícitos

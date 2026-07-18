@@ -1,4 +1,3 @@
-import pytest  # Importa pytest, el framework que descubre y ejecuta las funciones test_*
 from semana1.dia03_miercoles_15.solid_srp_ocp_lsp import (  # Importa las clases y funciones que se van a probar
     ViolacionSRP_SensorManager,  # Clase de ejemplo que mezcla dos responsabilidades (lectura y logging)
     ViolacionLSP_Sensor,         # Sensor que cambia la firma de get_data respecto a la clase base
