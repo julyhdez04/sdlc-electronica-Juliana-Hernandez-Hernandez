@@ -10,7 +10,7 @@ La semana se estructuró como una ruta de aprendizaje incremental:
 * Lunes: Python idiomático para ingenieros (Enums, dataclasses, Protocol, type hints).
 * Martes: FSM (Máquinas de Estado) orientadas a objetos.
 * Miércoles: Aplicación de principios SOLID (S, O, L).
-* Jueves: Aplicación de principios SOLID (I, D) e inyección de dependencias. [Referencia de código](https://github.com/julyhdez04/sdlc-electronica-Juliana-Hernandez-Hernandez/blob/main/semana1/dia04_jueves_16/solid_isp_dip.py)
+* Jueves: Aplicación de principios SOLID (I, D) e inyección de dependencias.
 * Viernes: Ejercicio integrador (Driver UART modernizado).
 * Sábado: Auditoría de código, validación de estándares y cierre de bitácora.
 
