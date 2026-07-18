@@ -44,3 +44,24 @@ La IA propuso 6 componentes para los código. Acepté 4. Rechacé 2:
 - Bloque de clase "BadSensorInterface": Rechazado. Violaba el principio ISP al forzar espacios vacios en dispositivos de solo lectura.
 - La IA propuso el diseño de métodos dentro de protocolos sin retornos definidos. Rechazado. Rompía las reglas de validación en mypy y bloqueaba el chequeo en tiempo de ejecución.
 
+## Entrada 5
+Prompt: "Genera una suite de pruebas integrales para UartDevice y sus parsers (Modbus, NMEA, CAN) usando pytest, incluyendo casos de overflow en el buffer."
+
+La IA generó 5 propuestas. Acepté 4. Rechacé 1:
+
+- test_config_invalid_stop_bits: Aceptada. Validó correctamente que la clase UartConfig lance el error esperado al configurar valores fuera de norma.
+
+- test_can_parser_extraction: Rechazada. La IA alucinó un payload binario y una clave de diccionario (can_id) inexistentes. Corrección: Reescribí el cuerpo del test para utilizar mi formato real b"CAN:1F4#AABBCCDD" y la clave correcta arbitration_id.
+
+- test_circular_buffer_overflow_behavior: Aceptada. Mantuve la lógica dinámica sugerida (uso de hasattr/getattr) para inspeccionar el estado interno del búfer sin acoplarme a un nombre de atributo específico.
+
+- test_uart_config_default_and_valid_values: Aceptada. Verificación estándar de parámetros iniciales del sistema.
+
+- test_uart_device_runtime_parser_switching: Aceptada con corrección. La estructura para inyectar parsers era correcta, pero el payload de CAN estaba mal definido; Corrección: Ajusté la entrada de datos para que el método parse del CanParser procesara correctamente la trama delimitada por #.
+
+Extensión de la Distinción (Desarrollos propios):
+- Tercer Protocolo (CAN Simplificado): Implementación de la lógica de parseo (CanParser) con delimitador # y conversión hex-a-entero.
+
+- Buffer Circular Thread-Safe: Integración de threading.Lock() para garantizar integridad de datos en entornos multihilo.
+
+- Logging Estructurado JSON: Implementación de un formateador de logs personalizado con json.dumps() para telemetría industrial.
