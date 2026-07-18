@@ -1,54 +1,112 @@
-from semana1.03.miercoles_15.solid_srp_ocp_lsp import (  # Importamos las dependencias locales del módulo de hoy
-    SensorReader, DataLogger, SensorReading,
-    ConsoleAlert, EmailAlert, AnomalyDetector,
-    TemperatureSensor, HumiditySensor, process_sensor
-)
+import pytest  # Importa pytest, el framework que descubre y ejecuta las funciones test_*
+from semana1.dia03_miercoles_15.solid_srp_ocp_lsp import (  # Importa las clases y funciones que se van a probar
+    ViolacionSRP_SensorManager,  # Clase de ejemplo que mezcla dos responsabilidades (lectura y logging)
+    ViolacionLSP_Sensor,         # Sensor que cambia la firma de get_data respecto a la clase base
+    ViolacionOCP_Detector,       # Detector que usa condicionales if/elif para cada tipo de alerta
+    SensorReading,               # Clase que representa una lectura de sensor (id + valor)
+    SensorReader,                # Clase encargada solo de leer datos del sensor
+    DataLogger,                  # Clase encargada solo de almacenar registros de lecturas
+    ConsoleAlert,                # Estrategia de alerta que "envía" el mensaje por consola
+    FileAlert,                   # Estrategia de alerta que "envía" el mensaje a un archivo
+    EmailAlert,                  # Estrategia de alerta que "envía" el mensaje por correo
+    TemperatureSensor,           # Sensor de temperatura, subtipo intercambiable de BaseSensor
+    HumiditySensor,              # Sensor de humedad, subtipo intercambiable de BaseSensor
+    process_sensor,              # Función que recibe cualquier BaseSensor y llama a get_data()
+    AnomalyDetector,             # Clase que revisa una lectura y dispara una alerta si supera un umbral
+    AlertStrategy,               # Clase abstracta base para todas las estrategias de alerta
+)  # Cierra el import
 
-# =========================================================================
-# TESTS: S - PRINCIPIO DE RESPONSABILIDAD ÚNICA (SRP)
-# =========================================================================
 
-def test_srp_reader_responsibility() -> None:  # Prueba encargada de validar la responsabilidad única del SensorReader
-    reader = SensorReader("TMP-01")  # SETUP: Instanciamos un SensorReader dedicado al sensor TMP-01
-    reading = reader.read_data(25.4)  # EXECUTION: Capturamos una lectura a partir de un valor de hardware simulado
-    assert reading.sensor_id == "TMP-01"  # ASSERTION: Verificamos que el id almacenado en la lectura sea el asignado
-    assert reading.value == 25.4  # ASSERTION: Verificamos que el valor analógico coincida con el procesado
+def test_srp_total():  # Prueba el comportamiento de la clase que mezcla lectura y logging
+    print("Ejecutando test SRP...")  # Mensaje informativo, visible solo con pytest -s
+    srp = ViolacionSRP_SensorManager("ID_FINAL")  # Crea una instancia con un id de sensor de prueba
+    srp.read_and_log(99.99)  # Lee un valor y lo registra internamente en un solo paso
+    assert srp.sensor_id == "ID_FINAL"  # Comprueba que el id se haya guardado bien
+    assert len(srp.logs) == 1  # Comprueba que se haya agregado un registro a la lista de logs
+    print("Test SRP finalizado.")  # Mensaje informativo de cierre
 
-def test_srp_logger_responsibility() -> None:  # Prueba encargada de validar la responsabilidad única del DataLogger
-    logger = DataLogger()  # SETUP: Instanciamos un DataLogger para almacenar en memoria
-    reading = SensorReading("HUM-01", 60.2)  # SETUP: Creamos un contenedor de lectura independiente de humedad
-    logger.log(reading)  # EXECUTION: Registramos la lectura dentro de nuestro logger dedicado
-    assert len(logger.logs) == 1  # ASSERTION: Verificamos que el tamaño del buffer haya incrementado a 1
-    assert logger.logs[0].sensor_id == "HUM-01"  # ASSERTION: Verificamos que el objeto guardado coincida exactamente
 
-# =========================================================================
-# TESTS: O - PRINCIPIO DE ABIERTO/CERRADO (OCP)
-# =========================================================================
+def test_cobertura_restante():  # Prueba las clases que sí respetan SRP y LSP
+    reader = SensorReader("S1")  # Crea un lector de sensor con id "S1"
+    reading = reader.read_data(25.0)  # Lee un valor y obtiene un objeto SensorReading
+    logger = DataLogger()  # Crea un logger vacío
+    logger.log(reading)  # Guarda la lectura en la lista interna del logger
 
-def test_ocp_console_alert_integration() -> None:  # Prueba de integración utilizando la estrategia básica de consola
-    alerta_consola = ConsoleAlert()  # SETUP: Creamos la instancia de la alerta física por consola
-    detector = AnomalyDetector(alerta_consola, threshold=30.0)  # SETUP: Inyectamos la alerta al detector con umbral 30.0
-    reading = SensorReading("SYS-OCP", 35.0)  # SETUP: Definimos una lectura que rompe el límite de seguridad (35 > 30)
-    detector.check(reading)  # EXECUTION: Corremos la inspección analítica del detector con la lectura
-    assert alerta_consola.last_message == "Anomalia en SYS-OCP"  # ASSERTION: Validamos que la alerta capturó el mensaje correcto
+    temp = TemperatureSensor("T1")  # Crea un sensor de temperatura con id "T1"
+    assert temp.get_data() == 25.0  # Verifica que devuelva el valor simulado esperado
 
-def test_ocp_extended_email_strategy() -> None:  # Prueba de extensión para validar el nuevo canal EmailAlert
-    alerta_email = EmailAlert()  # SETUP: Instanciamos el nuevo objeto EmailAlert agregado al sistema
-    detector = AnomalyDetector(alerta_email, threshold=30.0)  # SETUP: Lo inyectamos en el mismo AnomalyDetector original
-    reading = SensorReading("SYS-OCP", 42.1)  # SETUP: Definimos un desbordamiento de valor (42.1 > 30)
-    detector.check(reading)  # EXECUTION: Evaluamos la lectura en busca de discrepancias de hardware
-    assert alerta_email.last_message == "Anomalia en SYS-OCP"  # ASSERTION: Comprobamos que el canal recibió el mensaje íntegro
+    hum = HumiditySensor("H1")  # Crea un sensor de humedad con id "H1"
+    assert hum.get_data() == 55.5  # Verifica que devuelva el valor simulado esperado
 
-# =========================================================================
-# TESTS: L - PRINCIPIO DE SUSTITUCIÓN DE LISKOV (LSP)
-# =========================================================================
 
-def test_lsp_temperature_interchangeability() -> None:  # Prueba de sustituibilidad para el sensor físico de temperatura
-    sensor_temp = TemperatureSensor("T-100")  # SETUP: Creamos una instancia de TemperatureSensor
-    valor = process_sensor(sensor_temp)  # EXECUTION: Enviamos el sensor a la función cliente que espera BaseSensor
-    assert valor == 25.0  # ASSERTION: Verificamos que el cliente ejecute get_data y retorne el float esperado
+def test_cobertura_restante_ocp_y_final():  # Prueba las estrategias de alerta y la función process_sensor
+    ConsoleAlert().send("Test Console")  # Crea una alerta de consola y envía un mensaje de prueba
+    FileAlert().send("Test File")  # Crea una alerta de archivo y envía un mensaje de prueba
+    EmailAlert().send("Test Email")  # Crea una alerta de correo y envía un mensaje de prueba
 
-def test_lsp_humidity_interchangeability() -> None:  # Prueba de sustituibilidad para el sensor físico de humedad
-    sensor_hum = HumiditySensor("H-200")  # SETUP: Creamos una instancia de HumiditySensor
-    valor = process_sensor(sensor_hum)  # EXECUTION: Enviamos el sensor a la misma función cliente parametrizada
-    assert valor == 55.5  # ASSERTION: Comprobamos que el programa funcione idénticamente con la otra subclase
+    temp = TemperatureSensor("T1")  # Crea un sensor válido para pasarle a process_sensor
+    val = process_sensor(temp)  # Llama a la función genérica que funciona con cualquier BaseSensor
+    assert val == 25.0  # Verifica que el resultado coincida con get_data() del sensor
+
+
+class FakeAlert(AlertStrategy):  # Alerta de prueba que hereda de AlertStrategy
+    """Alerta falsa para probar AnomalyDetector sin depender de Console/File/EmailAlert."""
+    def __init__(self) -> None:  # Constructor de la alerta falsa
+        self.last_message = ""  # Guarda el último mensaje recibido, vacío al inicio
+
+    def send(self, message: str) -> None:  # Implementación del método abstracto send()
+        self.last_message = message  # Almacena el mensaje en lugar de imprimirlo o loggearlo de verdad
+
+
+def test_anomaly_detector_dispara_alerta_si_supera_umbral():  # Prueba que el detector SÍ alerte
+    alert = FakeAlert()  # Crea la alerta falsa para poder inspeccionar qué recibió
+    detector = AnomalyDetector(alert=alert, threshold=10.0)  # Crea el detector con un umbral de 10.0
+    reading = SensorReading("sensor_1", 15.0)  # Lectura que supera el umbral (15.0 > 10.0)
+
+    detector.check(reading)  # Ejecuta la verificación sobre la lectura
+
+    assert alert.last_message == "Anomalia en sensor_1"  # Verifica que la alerta se haya disparado con el mensaje correcto
+
+
+def test_anomaly_detector_no_dispara_alerta_si_no_supera_umbral():  # Prueba que el detector NO alerte
+    alert = FakeAlert()  # Crea la alerta falsa, limpia
+    detector = AnomalyDetector(alert=alert, threshold=10.0)  # Crea el detector con el mismo umbral
+    reading = SensorReading("sensor_1", 5.0)  # Lectura que no supera el umbral (5.0 <= 10.0)
+
+    detector.check(reading)  # Ejecuta la verificación sobre la lectura
+
+    assert alert.last_message == ""  # Verifica que la alerta nunca se haya llamado
+
+
+def test_violacion_ocp_detector_retorna_ok_si_no_hay_anomalia():  # Prueba el caso sin anomalía
+    detector = ViolacionOCP_Detector(threshold=10.0)  # Crea el detector con un umbral de 10.0
+    reading = SensorReading("sensor_2", 5.0)  # Lectura que no supera el umbral (5.0 <= 10.0)
+
+    resultado = detector.check(reading, mode="console")  # Verifica la lectura en modo "console"
+
+    assert resultado == "OK"  # Al no haber anomalía, debe retornar "OK"
+
+
+def test_violacion_ocp_detector_modo_console_con_anomalia():  # Prueba el modo "console" con anomalía
+    detector = ViolacionOCP_Detector(threshold=10.0)  # Crea el detector con un umbral de 10.0
+    reading = SensorReading("sensor_3", 20.0)  # Lectura que supera el umbral (20.0 > 10.0)
+
+    resultado = detector.check(reading, mode="console")  # Verifica la lectura en modo "console"
+
+    assert resultado == "Console: sensor_3"  # Debe retornar el formato correspondiente al modo consola
+
+
+def test_violacion_ocp_detector_modo_file_con_anomalia():  # Prueba el modo "file" con anomalía
+    detector = ViolacionOCP_Detector(threshold=10.0)  # Crea el detector con un umbral de 10.0
+    reading = SensorReading("sensor_4", 20.0)  # Lectura que supera el umbral (20.0 > 10.0)
+
+    resultado = detector.check(reading, mode="file")  # Verifica la lectura en modo "file"
+
+    assert resultado == "File: sensor_4"  # Debe retornar el formato correspondiente al modo archivo
+
+
+def test_violacion_lsp_sensor_rompe_la_firma():  # Prueba el sensor que rompe la sustitución de Liskov
+    sensor = ViolacionLSP_Sensor("S_LSP")  # Crea el sensor que exige un parámetro adicional
+    resultado = sensor.get_data(2.0)  # Llama a get_data pasando el parámetro extra "factor_escala"
+
+    assert resultado == 40.0  # Verifica el cálculo esperado: 20.0 * factor_escala (20.0 * 2.0 = 40.0)

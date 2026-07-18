@@ -35,15 +35,15 @@ class AnomalyDetector:
 #Como se procesa/formatea el dato del hardware.
 #Como y donde se almacena el registro.
 
-class ViolacionSRP_SensorManager: 
-    def __init__(self, sensor_id: str) -> None: #Inicializa el ID del sensor 
-        self.sensor_id = sensor_id #Guarda el ID del sensor asignado
-        self.logs: list[str] = [] #Inicializa una lista vacía para almacenar los registros de datos del sensor
+class ViolacionSRP_SensorManager:
+    def __init__(self, sensor_id: str) -> None:
+        self.sensor_id = sensor_id
+        self.logs = []
     
-    def read_and_log(self, raw_value: float) -> None: #Define un método que realiza dos tareas simultáneamente.
-        reading_str = f"Sensor {self.sensor_id}: {raw_value:.2f}" #Procesa y formatea el dato del hardware en una cadena de texto
-        self.logs.append(reading_str) #Almacena el registro en la lista de logs
-    
+    def read_and_log(self, raw_value: float) -> None:
+        # Forzamos la ejecución de la lógica en dos pasos explícitos
+        mensaje = f"Sensor {self.sensor_id}: {raw_value:.2f}"
+        self.logs.append(mensaje)
 #Ejemplo bien: Separación modular de tareas en composición de clases. Cada clase tiene una única responsabilidad. 
 class SensorReader:# Clase responsable de leer y procesar los datos del sensor
     def __init__(self, sensor_id: str) -> None:# Inicializa el ID del sensor
@@ -78,28 +78,24 @@ class ViolacionOCP_Detector: #Clase que viola el principio OCP, ya que requiere 
                 return f"File: {reading.sensor_id}" #Retorna a la respuesta específica para archivo
             
         return "OK" #Retorna un estado de OK si no se detecta ninguna anomalía 
-
 #Ejemplo bien: Módulos cerrados a modificación, abiertos a extensión mediante polimorfismo y composición de clases.
-class ConsoleAlert(AlertStrategy): #Clase que implementa la estrategia de alerta por consola
-    def __init__(self) -> None: #Define el constructor de la clase ConsoleAlert
-            self.last_message = "" #Inicializa la variable last_message como una cadena vacía para almacenar el último mensaje de alerta enviado    
+class ConsoleAlert(AlertStrategy):
+    def __init__(self) -> None:
+        self.last_message = ""
+    def send(self, message: str) -> None:
+        self.last_message = message
 
-    def send (self, message: str) -> None: #Implementa el método send para el canal de la consola
-            self.last_message = message #Almacena el mensaje de alerta en la variable last_message
+class FileAlert(AlertStrategy):
+    def __init__(self) -> None:
+        self.last_message = ""
+    def send(self, message: str) -> None:
+        self.last_message = message
 
-class FileAlert(AlertStrategy): #Clase que implementa la estrategia de alerta por archivo   
-    def __init__(self) -> None: #Define la inicialización del constructor enfocado en la verificación de pruebas
-            self.last_message = "" #Inicializa la variable last_message como una cadena vacía para almacenar el último mensaje de alerta enviado
-
-    def send(self, message: str) -> None: #Implementa el método send para el canal de archivo   
-            self.last_message = message #Almacena el mensaje de alerta en la variable last_message
-
-class EmailAlert(AlertStrategy): #Clase que implementa la estrategia de alerta por correo electrónico
-    def __init__(self) -> None: #Define la inicialización del constructor enfocado en la verificación de pruebas
-            self.last_message = "" #Inicializa la variable last_message como una cadena vacía para almacenar el último mensaje de alerta enviado
-
-    def send(self, message: str) -> None: #Implementa el método send para el canal de correo electrónico
-            self.last_message = message #Almacena el mensaje de alerta en la variable last_message
+class EmailAlert(AlertStrategy):
+    def __init__(self) -> None:
+        self.last_message = ""
+    def send(self, message: str) -> None:
+        self.last_message = message
 
  #==================================================================================================
 # L- Liskov Substitution Principle (LSP): Subtipos intercambiables      
@@ -128,8 +124,4 @@ class HumiditySensor(BaseSensor):
     
 def process_sensor(sensor: BaseSensor) -> float: 
         return sensor.get_data() #LLama al método común haciendo que se sustituya sin importar cuál sea.
-
-
-
-
 

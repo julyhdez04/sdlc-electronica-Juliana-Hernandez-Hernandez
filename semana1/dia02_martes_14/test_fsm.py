@@ -1,6 +1,6 @@
 #Tests
 
-from semana1.martes_14.fsm_demo import TrafficLightFSM, TrafficLightState #Abrir el archivo fsm_demo.py y traer la clase TrafficLightFSM y TrafficLightState
+from semana1.dia02_martes_14.fsm_demo import TrafficLightFSM, TrafficLightState #Abrir el archivo fsm_demo.py y traer la clase TrafficLightFSM y TrafficLightState
 
 
 def test_estado_inicial() -> None: #Definir la función de prueba para verificar el estado inicial del sémaforo
