@@ -31,6 +31,16 @@ La IA propuso una estructura completa con 6 tests. Acepté 4. Rechacé/Modifiqu�
 - test_srp_logger_responsibility: Aceptado. Validó la responsabilidad de DataLogger al gestionar el almacenamiento en la memoria de los logs, manteniendolo así desacoplado del hardware.
 - test_ocp_console_alert_integration: Aceptado. Comprobó el principio Open/Close al validar el canal base de las alertas por consola sin alterar la lógica de detección inicial.
 - test_ocp_extended_email_strategy: Aceptado. Validó la flexibilidad de OCP al integrar el nuevo canal "EmailAlert" extendiendo el sistema sin modificar una sola línea del firmware del "AnomalyDetector" original.
-- test_Isp_temperature_interchangeability: Modificado. La IA propuso evaluar la sustitución mediante una función "process_sensor" que causaba problemas de alcance, modifiqué el test para invocar "get_data()" demostransdo su intercambiabilidad.
+- test_lsp_temperature_interchangeability: Modificado. La IA propuso evaluar la sustitución mediante una función "process_sensor" que causaba problemas de alcance, modifiqué el test para invocar "get_data()" demostransdo su intercambiabilidad.
 - test_Isp_humidity_interchageability: Modificado. Al igual que el anterior, rechacé la función intermediaria propuesta por la IA y modifiqué el test para verificar de manera directa la consistencia del contrato frente a la clase base.
+
+## Entrada 4
+Prompt: "Implementa principios SOLID (ISP y DIP) en Python 3.14 para sensores con validacion en pytest y mypy"
+La IA propuso 6 componentes para los código. Acepté 4. Rechacé 2:
+- Interfaces segregadas (Readable, Writable, y Calibrate). Aceptado. Perminten fragmentar el diseño original haciendo que se cumpla ISP de manera estricta.
+- BasicTelemetrySensor: Aceptado. Implementa el protocolo de solo lectura sin utilizar funciones de configuración innecesesarias.
+- Métodos "process()" y "fetch_latest(), dentro de "DataProcessor". Aceptado. Habilitan el funcionamiento de DIP al interactuar con el repositorio.
+- Clase "InMemoryRepository". Aceptado. Proporciona un almacenamiento organizado en un diccionario para simular datos sin modificarlos en la base de datos real.
+- Bloque de clase "BadSensorInterface": Rechazado. Violaba el principio ISP al forzar espacios vacios en dispositivos de solo lectura.
+- La IA propuso el diseño de métodos dentro de protocolos sin retornos definidos. Rechazado. Rompía las reglas de validación en mypy y bloqueaba el chequeo en tiempo de ejecución.
 
