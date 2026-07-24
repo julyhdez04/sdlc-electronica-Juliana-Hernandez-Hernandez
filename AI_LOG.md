@@ -65,3 +65,13 @@ Extensión de la Distinción (Desarrollos propios):
 - Buffer Circular Thread-Safe: Integración de threading.Lock() para garantizar integridad de datos en entornos multihilo.
 
 - Logging Estructurado JSON: Implementación de un formateador de logs personalizado con json.dumps() para telemetría industrial.
+
+# Semana 2 
+## Entrada 1- Martes 21
+Prompt: "Puedes auditar los siguientes gherkins ¿Son verificables? ¿Son ambiguos? ¿Qué caso borde les faltan? (Se mandaron los gherkins correspondientes)"
+
+La IA auditó los gherkins dando como resultado: 
+
+1. **US-01 (Configuración):** La IA detectó que faltaba cubrir el escenario donde el archivo `config.json` existe pero su formato interno está corrupto.
+2. **US-02 (Cobertura de pruebas):** Se identificó un riesgo de infraestructura. Dado el uso de WSL y OneDrive, Windows podría bloquear el archivo `.coverage`, lo que haría fallar la escritura del reporte.
+3. **US-03 (Linter Ruff):** La IA señaló ambigüedad en la ejecución. Faltaba definir si el chequeo de Ruff será estrictamente manual en terminal o si se automatizará más adelante con un *pre-commit hook*.
