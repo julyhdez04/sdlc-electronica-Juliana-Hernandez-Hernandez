@@ -75,3 +75,18 @@ La IA auditó los gherkins dando como resultado:
 1. **US-01 (Configuración):** La IA detectó que faltaba cubrir el escenario donde el archivo `config.json` existe pero su formato interno está corrupto.
 2. **US-02 (Cobertura de pruebas):** Se identificó un riesgo de infraestructura. Dado el uso de WSL y OneDrive, Windows podría bloquear el archivo `.coverage`, lo que haría fallar la escritura del reporte.
 3. **US-03 (Linter Ruff):** La IA señaló ambigüedad en la ejecución. Faltaba definir si el chequeo de Ruff será estrictamente manual en terminal o si se automatizará más adelante con un *pre-commit hook*.
+
+## Entrada 2 - Miércoles 22 
+Prompt "Ayúdame con la siguiente actividad (se inserta la actividad del día de hoy), dame ideas de cómo estructurar los archivos de prueba y código para implementar la lógica del registro de sensores en Python paso a paso"
+
+La IA propuso 5 explicaciones detalladas para 5 componentes del código y pruebas. Acepté 3. Rechacé 2: 
+
+Explicación comentada de class SensorNotFoundError(Exception): pass: Lo tomé porque me ayudó a entender cómo definir mis propias alertas de error personalizadas para el proyecto heredando de la clase base Exception y el uso de la palabra pass.
+
+- Solución al IndentationError en el bloque with pytest.raises: Lo tomé para corregir el archivo test_sensor.py de la fase RED. Me sirvió para comprender que la estructura de Python funciona estrictamente con sangrías (espacios/tabs) en lugar de llaves.
+
+- Explicación comentada de los métodos __init__ y get: Lo tomé como código final documentado para mi archivo src/sensor_registry.py (fase GREEN). Documenta claramente cómo iniciar el diccionario privado self._sensors, el uso del self y cómo detonar el error con raise.
+
+- Explicación de las declaraciones import (import pytest, from src...): No lo tomé para documentar en el código final debido a que es una estructura básica para conectar archivos que asimilé rápidamente y no requería comentarios extra.
+
+- Explicación profunda de los Type Hints (-> None, dict[str, dict]): No lo tomé para desarrollar una documentación extensa. Preferí dejar únicamente los comentarios prácticos en el código para evitar sobresaturarme de información y mantener el enfoque en la lógica orientada a objetos y el ciclo TDD.
