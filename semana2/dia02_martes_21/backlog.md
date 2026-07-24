@@ -9,7 +9,7 @@ para inicializar los módulos sin tener datos quemados (hardcoded) en el código
 
 ### Criterios de aceptación (Gherkin):
 
-```
+``` python 
 Scenario: Cargar configuración válida correctamente
   Given un archivo de configuración "config.json" con formato válido
   When el sistema de configuración lee el archivo
@@ -17,7 +17,7 @@ Scenario: Cargar configuración válida correctamente
   And el sistema arranca sin errores
 ```
 
-```
+``` python
 Scenario: Rechazar archivo de configuración inexistente
   Given que el archivo "config.json" no se encuentra en el directorio
   When el sistema intenta inicializarse
@@ -27,7 +27,7 @@ Scenario: Rechazar archivo de configuración inexistente
 
 > **Auditoría de IA (Crítica):** Los escenarios cubren el camino feliz y el error de archivo faltante, pero falta un caso borde (edge case) crítico: ¿Qué pasa si el archivo existe pero el formato interno está corrupto (ej. falta una llave de cierre en el JSON)? El sistema no debería crashear abruptamente, debería manejar un ValueError o mostrar un mensaje claro.
 
----
+
 
 ## US-02: Validación de cobertura de código
 Como líder técnica,
@@ -37,14 +37,14 @@ para asegurar que la lógica SOLID está correctamente testeada antes de integra
 **Estimación:** 2 Story Points
 
 ### Criterios de aceptación (Gherkin):
-```
+```python
 Scenario: Pruebas superan el umbral de cobertura
   Given que el código actual tiene un 88% de cobertura real
   When ejecuto la suite de pruebas con "pytest --cov"
   Then los tests pasan exitosamente
   And el reporte final indica que se cumplió la métrica mínima
 ```
-```
+```pyhton
 Scenario: Pruebas caen por debajo del umbral exigido
   Given un código nuevo sin pruebas que reduce la cobertura al 80%
   When ejecuto la suite de pruebas
@@ -63,14 +63,14 @@ para evitar subir archivos con importaciones sin usar (F401) o errores de format
 **Estimación:** 1 Story Point
 
 ### Criterios de aceptación (Gherkin):
-```
+``` python
 Scenario: Archivo cumple con los estándares PEP 8
   Given un archivo de Python limpio y sin importaciones huérfanas
   When ejecuto el linter "ruff check"
   Then el proceso termina con código de salida 0 (sin errores)
   And me permite continuar con el flujo de trabajo
 ```
-```
+``` python
 Scenario: Archivo contiene importaciones sin utilizar
   Given un archivo con un error F401 (import unused)
   When ejecuto el linter
