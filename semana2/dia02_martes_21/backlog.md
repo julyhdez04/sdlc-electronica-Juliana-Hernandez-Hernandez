@@ -45,7 +45,7 @@ Scenario: Pruebas superan el umbral de cobertura
   And el reporte final indica que se cumplió la métrica mínima
 ```
 
-``` pyhton
+```pyhton
 Scenario: Pruebas caen por debajo del umbral exigido
   Given un código nuevo sin pruebas que reduce la cobertura al 80%
   When ejecuto la suite de pruebas
