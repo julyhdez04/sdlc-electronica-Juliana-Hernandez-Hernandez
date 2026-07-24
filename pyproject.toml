@@ -1,0 +1,29 @@
+[tool.pytest.ini_options]
+minversion = "6.0"
+# Cambiamos --cov=src por la ruta o simplemente eliminamos testpaths estricto si tus carpetas varían
+addopts = "--cov=. --cov-report=term-missing --cov-fail-under=80"
+testpaths = [
+    "semana0",
+    "semana1",
+    "semana2",
+]
+
+[tool.ruff]
+line-length = 400
+target-version = "py310"
+
+[tool.ruff.lint]
+# E: Errores generales de estilo (pycodestyle)
+# F: Errores de lógica y variables no definidas (Pyflakes)
+# I: Ordenamiento estricto de importaciones (isort)
+# UP: Actualización a sintaxis moderna de Python (pyupgrade)
+# B: Detección de errores comunes y malas prácticas (flake8-bugbear)
+select = ["E", "F", "I", "UP", "B"]
+ignore = []
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+check_untyped_defs = true

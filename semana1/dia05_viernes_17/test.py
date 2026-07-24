@@ -1,7 +1,9 @@
 import pytest
+
 from semana1.dia05_viernes_17.config import UartConfig
-from semana1.dia05_viernes_17.parsers import ModbusParser, CanParser
-from semana1.dia05_viernes_17.device import UartDevice, ThreadSafeCircularBuffer
+from semana1.dia05_viernes_17.device import ThreadSafeCircularBuffer, UartDevice
+from semana1.dia05_viernes_17.parsers import CanParser, ModbusParser
+
 
 def test_config_invalid_stop_bits_raises_error() -> None:
     """

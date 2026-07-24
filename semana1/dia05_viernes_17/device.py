@@ -2,9 +2,11 @@ import json
 import sys
 from collections import deque
 from threading import Lock
-from typing import Any, Dict, Optional
+from typing import Any
+
 from semana1.dia05_viernes_17.config import UartConfig
 from semana1.dia05_viernes_17.parsers import MessageParser
+
 
 class ThreadSafeCircularBuffer:
     """Buffer de memoria circular que evita la corrupción de datos al usar hilos concurrentes."""
@@ -21,7 +23,7 @@ class ThreadSafeCircularBuffer:
         with self._lock:
             self._buffer.append(item)
 
-    def pop(self) -> Optional[bytes]:
+    def pop(self) -> bytes | None:
         with self._lock:
             # Si el buffer tiene datos, saca el primero que llegó (FIFO). Si está vacío, devuelve None.
             return self._buffer.popleft() if self._buffer else None
@@ -58,7 +60,7 @@ class UartDevice:
         self.is_connected = False
         self.log_structured_json("INFO", "hardware_connection_terminated")
 
-    def read_and_parse(self, raw_data: bytes) -> Dict[str, Any]:
+    def read_and_parse(self, raw_data: bytes) -> dict[str, Any]:
         """El ciclo principal: captura datos crudos del canal, los encola y los procesa."""
         # Si el puerto físico no está abierto, no permitimos operaciones de lectura
         if not self.is_connected:

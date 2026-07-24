@@ -1,9 +1,10 @@
 import json
-from typing import Any, Dict
+from typing import Any
+
 
 class DataRecorder:
     @staticmethod
-    def record(filepath: str, parsed_data: Dict[str, Any]) -> None:
+    def record(filepath: str, parsed_data: dict[str, Any]) -> None:
         """
         Guarda los datos procesados en formato 'JSON-lines' (.jsonl).
         Cada registro es una sola línea independiente de texto JSON.

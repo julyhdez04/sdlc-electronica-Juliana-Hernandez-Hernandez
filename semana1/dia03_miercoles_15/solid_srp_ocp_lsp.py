@@ -1,4 +1,8 @@
-from abc import ABC, abstractmethod #Importar ABC y abstractmethod para crear clases abstractas y métodos abstractos
+from abc import (  #Importar ABC y abstractmethod para crear clases abstractas y métodos abstractos
+    ABC,
+    abstractmethod,
+)
+
 
 class SensorReading: #Define la clase SensorReading que representa una lectura de sensor con un identificador y un valor. No se encontraba en el código proporcionado en la guía por lo que al ejecutarlo se generaba un error de NameError: name 'SensorReading' is not defined. Se agregó la clase para solucionar el error.
     def __init__(self, sensor_id: str, value: float) -> None:

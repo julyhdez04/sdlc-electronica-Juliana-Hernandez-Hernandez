@@ -1,14 +1,18 @@
-class SensorNotFoundError(Exception): # Se define un error personalizado 
-    """Excepción lanzada cuando un sensor no está registrado.""" 
-    pass # Comando que indica que la clase está completa, no hace nada más
+class SensorNotFoundError(Exception):
+    """Excepción lanzada cuando un sensor no está registrado."""
 
-class SensorRegistry:  # Registra y administra los sensores del sistema 
-    def __init__(self) -> None: # Se define el constructor, se ejecuta automaticamente
-        self._sensors: dict[str, dict] = {} # Preparamos la estructura de datos interna
+    pass
 
-    def get(self, sensor_id: str) -> dict: # Método que busca y devuelve la información de un sensor especifico 
+
+class SensorRegistry:
+    """Registra y administra los sensores del sistema."""
+
+    def __init__(self) -> None:
+        self._sensors: dict[str, dict] = {}
+
+    def get(self, sensor_id: str) -> dict:
         """Obtiene un sensor por su ID."""
-        if sensor_id not in self._sensors: # Verifica si el ID que se busca NO existe dentro de la memoria
-            raise SensorNotFoundError(f"Sensor '{sensor_id}' no encontrado.") # Si no existe se activa la alerta creada
-        
-        return self._sensors[sensor_id] # Si si existe se devuelve el sensor
+        if sensor_id not in self._sensors:
+            raise SensorNotFoundError(f"Sensor '{sensor_id}' no encontrado.")
+
+        return self._sensors[sensor_id]

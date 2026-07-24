@@ -1,4 +1,8 @@
-from typing import Protocol, Dict, runtime_checkable # Importaciones necesarias para tipado estatico
+from typing import (  # Importaciones necesarias para tipado estatico
+    Protocol,
+    runtime_checkable,
+)
+
 
 class SensorReading:
     def __init__(self, sensor_id: str, value: float) -> None:
@@ -72,7 +76,7 @@ class PostgreSQLRepository(DataRepository):
 
 class InMemoryRepository(DataRepository):
     def __init__(self) -> None:
-        self._storage: Dict[str, SensorReading] = {} # Almacen en memoria RAM usando un diccionario interno
+        self._storage: dict[str, SensorReading] = {} # Almacen en memoria RAM usando un diccionario interno
 
     def save(self, reading: SensorReading) -> None:
         self._storage[reading.sensor_id] = reading # Almacena o actualiza la lectura usando el ID como llave

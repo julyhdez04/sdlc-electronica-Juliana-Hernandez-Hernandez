@@ -1,4 +1,12 @@
-from semana1.dia04_jueves_16.solid_isp_dip import SensorReading, BasicTelemetrySensor, InMemoryRepository, DataProcessor, BadSensorInterface, PostgreSQLRepository
+from semana1.dia04_jueves_16.solid_isp_dip import (
+    BadSensorInterface,
+    BasicTelemetrySensor,
+    DataProcessor,
+    InMemoryRepository,
+    PostgreSQLRepository,
+    SensorReading,
+)
+
 
 def test_basic_sensor_reading_isp() -> None:
     sensor = BasicTelemetrySensor(sensor_id="TEMP-01", value=24.5) # Instancia el sensor enfocado en lectura
@@ -18,7 +26,7 @@ def test_data_processor_with_in_memory_repository_dip() -> None:
     assert resultado is not None # Valida que la respuesta tenga contenido
     assert resultado.value == 60.0 # Valida que el dato almacenado en memoria no sufriera modificaciones
     
-def test_data_processor_full_coverage():
+def test_data_processor_full_coverage() -> None:
     repo = InMemoryRepository()
     processor = DataProcessor(repo)
     reading = SensorReading("S1", 100.0)
@@ -27,7 +35,7 @@ def test_data_processor_full_coverage():
     
     assert len(repo._storage) == 1
 
-def test_cobertura_total_isp_dip():
+def test_cobertura_total_isp_dip() -> None:
     # 1. Cubrir BadSensorInterface (líneas 14, 16, 18)
     bad = BadSensorInterface()
     assert bad.read() == 0.0

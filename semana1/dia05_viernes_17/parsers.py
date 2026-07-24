@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict
+from typing import Any
+
 
 # 'ABC' (Abstract Base Class) significa que esta clase es solo un contrato de diseño.
 # No puedes hacer "parser = MessageParser()", te dará un error. Obligatoriamente debes heredar de ella.
@@ -11,7 +12,7 @@ class MessageParser(ABC):
         pass
 
     @abstractmethod
-    def parse(self, data: bytes) -> Dict[str, Any]:
+    def parse(self, data: bytes) -> dict[str, Any]:
         """Toma los bytes crudos del hardware y los traduce a datos legibles en un diccionario."""
         pass
 
@@ -22,7 +23,7 @@ class ModbusParser(MessageParser):
         # que tenga al menos 4 bytes y que no empiece con caracteres de texto como '$' o 'CAN:'
         return len(data) >= 4 and not data.startswith(b"$") and not data.startswith(b"CAN:")
 
-    def parse(self, data: bytes) -> Dict[str, Any]:
+    def parse(self, data: bytes) -> dict[str, Any]:
         # Cláusula de salvaguarda: si los bytes no son Modbus, abortamos de inmediato
         if not self.can_parse(data):
             raise ValueError("Estructura de frame inválida para Modbus RTU.")
@@ -42,7 +43,7 @@ class NMEAParser(MessageParser):
         # Las tramas de diagnóstico de GPS tipo NMEA siempre arrancan con la cadena '$GPGGA'
         return data.startswith(b"$GPGGA")
 
-    def parse(self, data: bytes) -> Dict[str, Any]:
+    def parse(self, data: bytes) -> dict[str, Any]:
         if not self.can_parse(data):
             raise ValueError("Sentencia inválida para protocolo NMEA.")
         try:
@@ -59,7 +60,7 @@ class NMEAParser(MessageParser):
                 "longitude": partes[4] if len(partes) > 4 else ""  # Coordenada de longitud
             }
         except Exception as e:
-            raise ValueError(f"Error de decodificación NMEA: {e}")
+            raise ValueError(f"Error de decodificación NMEA: {e}") from e
 
 
 class CanParser(MessageParser):
@@ -68,7 +69,7 @@ class CanParser(MessageParser):
         # Identifica si la trama viene marcada explícitamente desde un nodo CAN
         return data.startswith(b"CAN:")
 
-    def parse(self, data: bytes) -> Dict[str, Any]:
+    def parse(self, data: bytes) -> dict[str, Any]:
         if not self.can_parse(data):
             raise ValueError("Identificador de cabecera CAN ausente.")
         try:
@@ -84,5 +85,5 @@ class CanParser(MessageParser):
                 "dlc": len(payload_hex) // 2,      # Data Length Code: cantidad de bytes (cada byte son 2 letras hex)
                 "data": payload_hex                # Carga útil de datos de los sensores industriales
             }
-        except Exception:
-            raise ValueError("Frame CAN corrupto o mal estructurado.")
+        except Exception as e:
+            raise ValueError("Frame CAN corrupto o mal estructurado.") from e
