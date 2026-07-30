@@ -1,3 +1,10 @@
+[project]
+name = "sdlc-electronica-juliana"
+version = "0.1.0"
+dependencies = [
+    "fastapi[standard]>=0.141.1",
+]
+
 [tool.pytest.ini_options]
 minversion = "6.0"
 # Cambiamos --cov=src por la ruta o simplemente eliminamos testpaths estricto si tus carpetas varían
