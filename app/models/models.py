@@ -22,3 +22,4 @@ class ReadingModel(Base):
     unit: Mapped[str] = mapped_column()
     
     # Columna created_at: registra automáticamente la fecha y hora exacta en que se crea el dato
+    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
