@@ -28,7 +28,7 @@ def get_sensor(sensor_id: int, db: Session = Depends(get_db)):
 @router.put("/{sensor_id}", response_model=SensorOut)
 def update_sensor(sensor_id: int, sensor_data: SensorCreate, db: Session = Depends(get_db)):
     service = SensorService(SensorRepository(db))
-    updated = service.repository.update(sensor_id, sensor_data)
+    updated = service.update_sensor(sensor_id, sensor_data)
     if not updated:
         raise HTTPException(status_code=404, detail="Sensor no encontrado.")
     return updated
@@ -36,7 +36,7 @@ def update_sensor(sensor_id: int, sensor_data: SensorCreate, db: Session = Depen
 @router.delete("/{sensor_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_sensor(sensor_id: int, db: Session = Depends(get_db)):
     service = SensorService(SensorRepository(db))
-    deleted = service.repository.delete(sensor_id)
+    deleted = service.remove_sensor(sensor_id)
     if not deleted:
         raise HTTPException(status_code=404, detail="Sensor no encontrado.")
     return None
