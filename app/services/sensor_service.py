@@ -15,3 +15,9 @@ class SensorService:
 
     def register_sensor(self, sensor_data: SensorCreate):
         return self.repository.create(sensor_data)
+    
+    def update_sensor(self, sensor_id: int, sensor_data):
+        return self.repository.update(sensor_id, sensor_data)
+
+    def remove_sensor(self, sensor_id: int):
+        return self.repository.delete(sensor_id)
