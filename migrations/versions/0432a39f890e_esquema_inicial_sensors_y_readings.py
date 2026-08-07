@@ -35,7 +35,7 @@ def upgrade() -> None:
     sa.Column('tipo_sensor', sa.VARCHAR(), nullable=False),
     sa.Column('value', sa.FLOAT(), nullable=False),
     sa.Column('unit', sa.VARCHAR(), nullable=False),
-    sa.Column('created_at', sa.DATETIME(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_readings_id'), 'readings', ['id'], unique=False)
