@@ -46,6 +46,11 @@ La aplicación de los principios SOLID permitió reencuadrar el conocimiento de 
 * DIP (Dependency Inversion Principle): La inyección de dependencias permitió desacoplar la lógica de alto nivel de las implementaciones concretas de hardware, facilitando el testing unitario y la modularidad.
 
 
+
+# SensorHub API
+
+[![CI Pipeline](https://github.com/julyhdez04/sdlc-electronica-Juliana-Hernandez-Hernandez/actions/workflows/ci.yml/badge.svg)](https://github.com/julyhdez04/sdlc-electronica-Juliana-Hernandez-Hernandez/actions/workflows/ci.yml)
+
 ## Despliegue en Producción (Render)
 
 La aplicación se encuentra desplegada de forma continua en Render mediante Infrastructure as Code (`render.yaml`). Cada cambio mergeado a la rama `main` ejecuta automáticamente las migraciones con Alembic y actualiza el servicio.
