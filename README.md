@@ -44,3 +44,12 @@ La aplicación de los principios SOLID permitió reencuadrar el conocimiento de 
 * LSP (Liskov Substitution Principle): Las implementaciones de protocolos garantizan que cualquier objeto pueda ser sustituido por sus subtipos sin alterar la integridad del sistema.
 * ISP (Interface Segregation Principle): La creación de interfaces específicas evitó forzar a los componentes a depender de métodos innecesarios.
 * DIP (Dependency Inversion Principle): La inyección de dependencias permitió desacoplar la lógica de alto nivel de las implementaciones concretas de hardware, facilitando el testing unitario y la modularidad.
+
+
+## Despliegue en Producción (Render)
+
+La aplicación se encuentra desplegada de forma continua en Render mediante Infrastructure as Code (`render.yaml`). Cada cambio mergeado a la rama `main` ejecuta automáticamente las migraciones con Alembic y actualiza el servicio.
+
+* **URL Pública de la API:** [https://sensorhub-api-cbtj.onrender.com](https://sensorhub-api-cbtj.onrender.com)
+* **Documentación Interactiva (Swagger UI):** [https://sensorhub-api-cbtj.onrender.com/docs](https://sensorhub-api-cbtj.onrender.com/docs)
+* **Endpoint de Salud (Health Check):** [https://sensorhub-api-cbtj.onrender.com/health](https://sensorhub-api-cbtj.onrender.com/health)
