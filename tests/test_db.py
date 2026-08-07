@@ -17,4 +17,14 @@ def test_get_db_yields_and_closes_session():
     except StopIteration:
         pass
 
+def test_get_database_url_postgres_legacy(monkeypatch):
+    monkeypatch.setenv("DATABASE_URL", "postgres://user:pass@localhost/db")
+    from app.db import get_database_url
+    assert get_database_url() == "postgresql+psycopg://user:pass@localhost/db"
+
+
+def test_get_database_url_postgresql_sin_driver(monkeypatch):
+    monkeypatch.setenv("DATABASE_URL", "postgresql://user:pass@localhost/db")
+    from app.db import get_database_url
+    assert get_database_url() == "postgresql+psycopg://user:pass@localhost/db"
 
