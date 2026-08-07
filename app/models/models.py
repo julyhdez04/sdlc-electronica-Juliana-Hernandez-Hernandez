@@ -1,6 +1,9 @@
 from datetime import datetime
+
 from sqlalchemy.orm import Mapped, mapped_column
+
 from app.db import Base
+
 
 class SensorModel(Base):
     __tablename__ = "sensors"

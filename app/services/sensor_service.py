@@ -1,5 +1,6 @@
 from app.schemas.schemas import SensorCreate
 
+
 class SensorService:
     def __init__(self, repository):
         self.repository = repository
@@ -7,7 +8,7 @@ class SensorService:
     def get_sensor(self, sensor_id: int):
         sensor = self.repository.get_by_id(sensor_id)
         if not sensor:
-            raise ValueError(f"El sensor con ID {sensor_id} no existe.")
+            raise ValueError(f"El sensor no existe con ID {sensor_id}")
         return sensor
 
     def list_sensors(self, skip: int = 0, limit: int = 100):

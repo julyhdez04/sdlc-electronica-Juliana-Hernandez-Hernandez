@@ -1,11 +1,12 @@
 from datetime import datetime
-from typing import List, Optional
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
+
 from app.db import get_db
 from app.repositories.reading_repository import ReadingRepository
+from app.schemas.schemas import SensorReadingCreate, SensorReadingOut, SensorReadingUpdate
 from app.services.reading_service import ReadingService
-from app.schemas.schemas import SensorReadingCreate, SensorReadingUpdate, SensorReadingOut
 
 router = APIRouter(tags=["Readings"])
 
@@ -17,13 +18,13 @@ def create_sensor_reading(id: str, reading: SensorReadingCreate, db: Session = D
     except RuntimeError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
 
-@router.get("/sensors/{id}/readings", response_model=List[SensorReadingOut])
+@router.get("/sensors/{id}/readings", response_model=list[SensorReadingOut])
 def list_sensor_readings(
     id: str,
     limit: int = Query(50, ge=1),
     offset: int = Query(0, ge=0),
-    date_from: Optional[datetime] = Query(None, alias="from"),
-    date_to: Optional[datetime] = Query(None, alias="to"),
+    date_from: datetime | None = Query(None, alias="from"),
+    date_to: datetime | None = Query(None, alias="to"),
     db: Session = Depends(get_db),
 ):
     service = ReadingService(ReadingRepository(db))

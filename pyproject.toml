@@ -19,6 +19,8 @@ testpaths = [
 [tool.ruff]
 line-length = 400
 target-version = "py310"
+select = ["E", "F", "I", "B"]
+ignore = ["B008"]
 
 [tool.ruff.lint]
 # E: Errores generales de estilo (pycodestyle)
@@ -27,7 +29,7 @@ target-version = "py310"
 # UP: Actualización a sintaxis moderna de Python (pyupgrade)
 # B: Detección de errores comunes y malas prácticas (flake8-bugbear)
 select = ["E", "F", "I", "UP", "B"]
-ignore = []
+ignore = ["B008"]
 
 [tool.mypy]
 python_version = "3.10"
@@ -35,4 +37,7 @@ warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
 check_untyped_defs = true
+
+
+
 

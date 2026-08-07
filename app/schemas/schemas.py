@@ -1,8 +1,7 @@
 from datetime import datetime
 from enum import Enum
-from typing import Optional
-from pydantic import BaseModel, field_validator, model_validator
 
+from pydantic import BaseModel, field_validator, model_validator
 
 # --- Sensores ---
 
@@ -74,8 +73,8 @@ class SensorReadingCreate(BaseModel):
 
 
 class SensorReadingUpdate(BaseModel):
-    value: Optional[float] = None
-    unit: Optional[str] = None
+    value: float | None = None
+    unit: str | None = None
 
 
 class SensorReadingOut(BaseModel):

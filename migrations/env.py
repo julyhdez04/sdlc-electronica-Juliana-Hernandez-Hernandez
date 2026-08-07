@@ -1,12 +1,11 @@
 import os
 import sys
-from pathlib import Path
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
 from alembic import context
+from sqlalchemy import engine_from_config, pool
+
+from app.db import DATABASE_URL, Base
 
 # Añade la raíz del proyecto al path de Python
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -22,8 +21,7 @@ if config.config_file_name is not None:
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-from app.db import Base, DATABASE_URL
-from app.models import *
+
 
 target_metadata = Base.metadata
 

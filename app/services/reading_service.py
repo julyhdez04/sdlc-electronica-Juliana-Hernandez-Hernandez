@@ -1,6 +1,7 @@
 from datetime import datetime
-from typing import Optional
+
 from app.schemas.schemas import SensorReadingCreate, SensorReadingUpdate
+
 
 class ReadingService:
     def __init__(self, repository):
@@ -15,15 +16,15 @@ class ReadingService:
                 unit=reading_data.unit,
             )
         except Exception as e:
-            raise RuntimeError(f"Error creating sensor reading: {str(e)}")
+            raise RuntimeError(f"Error creating sensor reading: {str(e)}") from e
 
     def list_readings(
         self,
         sensor_id: str,
         limit: int = 50,
         offset: int = 0,
-        date_from: Optional[datetime] = None,
-        date_to: Optional[datetime] = None,
+        date_from: datetime | None = None,
+        date_to: datetime | None = None,
     ):
         if date_from and date_to and date_from > date_to:
             raise ValueError("The 'from' date must be earlier than or equal to the 'to' date.")

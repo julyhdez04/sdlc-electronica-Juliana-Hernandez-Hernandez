@@ -1,6 +1,8 @@
 import pytest
 from pydantic import ValidationError
-from app.schemas.schemas import SensorReadingCreate, SensorCreate
+
+from app.schemas.schemas import SensorCreate, SensorReadingCreate
+
 
 def test_sensor_reading_create_accepts_valid_unit():
     reading = SensorReadingCreate(tipo_sensor="temperatura", value=25.0, unit="°C")

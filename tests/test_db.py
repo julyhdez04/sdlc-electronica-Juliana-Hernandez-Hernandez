@@ -16,3 +16,5 @@ def test_get_db_yields_and_closes_session():
         next(generator)
     except StopIteration:
         pass
+
+

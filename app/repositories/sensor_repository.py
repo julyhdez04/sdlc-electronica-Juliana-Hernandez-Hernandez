@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
+
 from app.models.models import SensorModel
 from app.schemas.schemas import SensorCreate
+
 
 class SensorRepository:
     def __init__(self, db: Session):

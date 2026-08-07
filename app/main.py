@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 
 from app.db import Base, engine
-from app.routers.sensor_router import router as sensor_router
 from app.routers.reading_router import router as reading_router
+from app.routers.sensor_router import router as sensor_router
 
 Base.metadata.create_all(bind=engine)
 

@@ -1,11 +1,12 @@
-from typing import List
+
 from app.models.models import ReadingModel
+
 # O si prefieres usar un diccionario/objeto simple en lugar del modelo ORM, 
 # también puedes simularlo con una clase ligera.
 
 class FakeReadingRepository:
     def __init__(self) -> None:
-        self.readings: List[ReadingModel] = []
+        self.readings: list[ReadingModel] = []
         self._id_counter = 1
 
     def add(self, sensor_id: str, value: float, unit: str) -> ReadingModel:
@@ -23,5 +24,5 @@ class FakeReadingRepository:
         """Mismo método que SensorRepository.create(), para ser intercambiable (DIP)."""
         return self.add(sensor_data.sensor_id, sensor_data.value, sensor_data.unit)
 
-    def list_for_sensor(self, sensor_id: str) -> List[ReadingModel]:
+    def list_for_sensor(self, sensor_id: str) -> list[ReadingModel]:
         return [r for r in self.readings if r.sensor_id == sensor_id]

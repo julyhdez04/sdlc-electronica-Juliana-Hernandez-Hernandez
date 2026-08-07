@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from app.services.sensor_service import SensorService
-from app.repositories.sensor_repository import SensorRepository  # <- el import que faltaba
+
 from app.db import get_db
+from app.repositories.sensor_repository import SensorRepository  # <- el import que faltaba
 from app.schemas.schemas import SensorCreate, SensorOut
+from app.services.sensor_service import SensorService
 
 router = APIRouter(prefix="/sensors", tags=["Sensors"])
 
@@ -23,7 +24,7 @@ def get_sensor(sensor_id: int, db: Session = Depends(get_db)):
         service = SensorService(SensorRepository(db))
         return service.get_sensor(sensor_id)
     except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
 
 @router.put("/{sensor_id}", response_model=SensorOut)
 def update_sensor(sensor_id: int, sensor_data: SensorCreate, db: Session = Depends(get_db)):

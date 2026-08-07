@@ -1,7 +1,9 @@
 from datetime import datetime
-from typing import Optional
+
 from sqlalchemy.orm import Session
+
 from app.models.models import ReadingModel
+
 
 class ReadingRepository:
     def __init__(self, db: Session):
@@ -29,8 +31,8 @@ class ReadingRepository:
         sensor_id: str,
         limit: int = 50,
         offset: int = 0,
-        date_from: Optional[datetime] = None,
-        date_to: Optional[datetime] = None,
+        date_from: datetime | None = None,
+        date_to: datetime | None = None,
     ):
         query = self.db.query(ReadingModel).filter(ReadingModel.sensor_id == sensor_id)
         if date_from:

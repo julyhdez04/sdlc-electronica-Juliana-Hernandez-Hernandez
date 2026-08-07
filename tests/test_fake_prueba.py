@@ -1,5 +1,6 @@
 from tests.tests_fake import FakeReadingRepository
 
+
 def test_fake_repository_add_and_list():
     # Arrange: Instanciamos el repositorio en memoria
     repo = FakeReadingRepository()
