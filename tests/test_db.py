@@ -28,3 +28,6 @@ def test_get_database_url_postgresql_sin_driver(monkeypatch):
     from app.db import get_database_url
     assert get_database_url() == "postgresql+psycopg://user:pass@localhost/db"
 
+#Prueba para romper el CI a propósito SEMANA 4, JUEVES
+def test_romper_ci_a_proposito():
+    assert 1 == 2
