@@ -27,3 +27,9 @@ Este documento registra la práctica con **Aider** y el análisis de la IA asist
 
 ## 4. Conclusión
 Utilizar herramientas como Aider demuestra que la IA en el desarrollo de software no busca ocultarse, sino manejarse con **absoluta transparencia** a través de la trazabilidad estricta en Git.
+
+### Actualización de Herramientas (Stack Tooling)
+**Contexto:** La planificación original contemplaba el uso de Claude 3.5 Sonnet a través de Aider para las tareas de revisión de código automatizada.
+**Problema:** El modelo superó su cuota de uso gratuito (Rate Limit/Paywall), bloqueando la ejecución del script en la terminal.
+**Solución adoptada:** Se reconfiguró el entorno para utilizar `llama-3.3-70b-versatile` a través de la API de Groq (`--model groq/llama-3.3-70b-versatile`). 
+**Justificación:** Groq ofrece acceso gratuito y de alta velocidad. El modelo Llama 3.3 demostró tener la capacidad analítica suficiente para identificar casos borde en la lógica de dominio (`ReadingModel`) y generar las pruebas de integración en `pytest` requeridas, cumpliendo el objetivo del hito sin impacto en el presupuesto del proyecto.
