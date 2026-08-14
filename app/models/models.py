@@ -22,3 +22,15 @@ class ReadingModel(Base):
     value: Mapped[float] = mapped_column()
     unit: Mapped[str] = mapped_column()
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, nullable=False)
+
+    def __init__(self, sensor_id: str, tipo_sensor: str, value: float, unit: str):
+        if sensor_id is None:
+            raise IntegrityError("sensor_id cannot be None")
+        if value < -273.15 or value > 1000:  # Rango físicamente válido para la temperatura
+            raise ValueError("value is out of range")
+        if unit not in ["°C", "°F", "K"]:  # Formatos válidos para la unidad
+            raise ValueError("unit is invalid")
+        self.sensor_id = sensor_id
+        self.tipo_sensor = tipo_sensor
+        self.value = value
+        self.unit = unit
