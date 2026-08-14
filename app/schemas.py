@@ -17,7 +17,7 @@ class SensorCreate(BaseModel):
         tipos_validos = {"temperatura", "humedad", "presion"}
         if v not in tipos_validos:
             raise ValueError(f"Tipo desconocido. Permitidos: {tipos_validos}")
-        return v
+        return v.lower()  # Convertir a minúsculas para evitar problemas de case
 
 
 class SensorOut(BaseModel):
@@ -60,7 +60,7 @@ class SensorReadingCreate(BaseModel):
         if self.value is None or self.unit is None:
             raise ValueError("Valor y unidad no pueden ser vacíos")
         unidades_ok = UNIDADES_VALIDAS[self.tipo_sensor]
-        if self.unit not in unidades_ok:
+        if self.unit.lower() not in [u.lower() for u in unidades_ok]:
             raise ValueError(
                 f"Unidad '{self.unit}' desconocida para tipo '{self.tipo_sensor.value}'. "
                 f"Permitidas: {unidades_ok}"
