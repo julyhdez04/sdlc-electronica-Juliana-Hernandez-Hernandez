@@ -21,4 +21,4 @@ class ReadingModel(Base):
     tipo_sensor: Mapped[str] = mapped_column()
     value: Mapped[float] = mapped_column()
     unit: Mapped[str] = mapped_column()
-    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, nullable=False)
