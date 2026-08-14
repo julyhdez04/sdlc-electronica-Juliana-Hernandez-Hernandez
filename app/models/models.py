@@ -1,4 +1,5 @@
 from datetime import datetime
+from sqlalchemy.exc import IntegrityError
 
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -25,7 +26,7 @@ class ReadingModel(Base):
 
     def __init__(self, sensor_id: str, tipo_sensor: str, value: float, unit: str):
         if sensor_id is None:
-            raise IntegrityError("sensor_id cannot be None")
+            raise ValueError("sensor_id cannot be None")
         if value < -273.15 or value > 1000:  # Rango físicamente válido para la temperatura
             raise ValueError("value is out of range")
         if unit not in ["°C", "°F", "K"]:  # Formatos válidos para la unidad
