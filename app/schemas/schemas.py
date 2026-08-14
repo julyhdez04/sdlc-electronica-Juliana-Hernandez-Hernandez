@@ -12,6 +12,8 @@ class SensorCreate(BaseModel):
     @field_validator("tipo")
     @classmethod
     def validate_tipo(cls, v: str) -> str:
+        if v is None or v == "":
+            raise ValueError("Tipo no puede ser vacío")
         tipos_validos = {"temperatura", "humedad", "presion"}
         if v not in tipos_validos:
             raise ValueError(f"Tipo desconocido. Permitidos: {tipos_validos}")
@@ -19,9 +21,9 @@ class SensorCreate(BaseModel):
 
 
 class SensorOut(BaseModel):
-    id: int
-    name: str
-    tipo: str
+    id: int | None
+    name: str | None
+    tipo: str | None
 
     class Config:
         from_attributes = True
@@ -55,6 +57,8 @@ class SensorReadingCreate(BaseModel):
 
     @model_validator(mode="after")
     def validar_fisica(self):
+        if self.value is None or self.unit is None:
+            raise ValueError("Valor y unidad no pueden ser vacíos")
         unidades_ok = UNIDADES_VALIDAS[self.tipo_sensor]
         if self.unit not in unidades_ok:
             raise ValueError(
