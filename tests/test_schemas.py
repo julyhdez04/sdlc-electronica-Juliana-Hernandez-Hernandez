@@ -1,25 +1,42 @@
 import pytest
 from pydantic import ValidationError
 
-from app.schemas.schemas import SensorCreate, SensorReadingCreate
+from app.schemas.schemas import SensorCreate, SensorReadingCreate, TipoSensor
 
 
 def test_sensor_reading_create_accepts_valid_unit():
     reading = SensorReadingCreate(tipo_sensor="temperatura", value=25.0, unit="°C")
     assert reading.unit == "°C"
 
+
 def test_sensor_reading_create_rejects_invalid_unit():
     with pytest.raises(ValidationError):
         SensorReadingCreate(tipo_sensor="temperatura", value=25.0, unit="unidad_invalida")
+
 
 def test_sensor_reading_create_rejects_out_of_range_value():
     with pytest.raises(ValidationError):
         SensorReadingCreate(tipo_sensor="humedad", value=150.0, unit="%")
 
+
 def test_sensor_reading_create_rejects_unit_from_wrong_type():
     with pytest.raises(ValidationError):
         SensorReadingCreate(tipo_sensor="temperatura", value=25.0, unit="%")
 
+
 def test_sensor_create_rejects_invalid_tipo():
     with pytest.raises(ValidationError):
         SensorCreate(name="Sensor X", tipo="tipo_invalido")
+
+
+def test_sensor_create_tipo_vacio_rechazado():
+    with pytest.raises(ValueError):
+        SensorCreate(name="sensor1", tipo="")
+
+
+def test_validar_fisica_rechaza_value_none():
+    reading = SensorReadingCreate.model_construct(
+        tipo_sensor=TipoSensor.temperatura, value=None, unit=None
+    )
+    with pytest.raises(ValueError):
+        SensorReadingCreate.validar_fisica(reading)

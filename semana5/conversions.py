@@ -1,2 +1,2 @@
 def celsius_to_fahrenheit(c: float) -> float:
-    pass
+    return c * 9 / 5 + 32

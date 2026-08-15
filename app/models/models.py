@@ -1,5 +1,4 @@
 from datetime import datetime
-from sqlalchemy.exc import IntegrityError
 
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -24,14 +23,25 @@ class ReadingModel(Base):
     unit: Mapped[str] = mapped_column()
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, nullable=False)
 
-    def __init__(self, sensor_id: str, tipo_sensor: str, value: float, unit: str):
+    def __init__(
+        self,
+        sensor_id: str,
+        tipo_sensor: str,
+        value: float,
+        unit: str,
+        id: int | None = None,
+        created_at: datetime | None = None,
+    ):
         if sensor_id is None:
             raise ValueError("sensor_id cannot be None")
-        if value < -273.15 or value > 1000:  # Rango físicamente válido para la temperatura
+        if value < -273.15 or value > 1000:
             raise ValueError("value is out of range")
-        if unit not in ["°C", "°F", "K"]:  # Formatos válidos para la unidad
+        if unit not in ["°C", "°F", "K", "%", "hPa", "lux", "ppm"]:
             raise ValueError("unit is invalid")
+        if id is not None:
+            self.id = id
         self.sensor_id = sensor_id
         self.tipo_sensor = tipo_sensor
         self.value = value
         self.unit = unit
+        self.created_at = created_at or datetime.utcnow()

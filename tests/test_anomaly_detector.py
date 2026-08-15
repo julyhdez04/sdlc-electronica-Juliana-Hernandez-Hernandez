@@ -1,9 +1,7 @@
-from typing import Protocol
 from unittest.mock import MagicMock
 
-class AlertStrategy(Protocol):
-    def send(self, message: str) -> None:
-        ...
+from app.services.anomaly_service import AlertStrategy, AnomalyDetector
+
 
 def test_anomaly_detector_no_dispara_alerta_si_no_supera_umbral() -> None:
     # Arrange
@@ -17,6 +15,7 @@ def test_anomaly_detector_no_dispara_alerta_si_no_supera_umbral() -> None:
 
     # Assert
     alert_strategy.send.assert_not_called()
+
 
 def test_anomaly_detector_dispara_alerta_si_supera_umbral() -> None:
     # Arrange
