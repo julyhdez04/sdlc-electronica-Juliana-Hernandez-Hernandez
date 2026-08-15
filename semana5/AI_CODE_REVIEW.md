@@ -32,3 +32,5 @@ Se integraron 5 nuevas pruebas unitarias usando `pytest` en `tests/test_models.p
 * `test_create_sensor_with_valid_data`
 
 Todas las pruebas se ejecutaron exitosamente, confirmando que la integridad de los datos está asegurada desde la instanciación del objeto.
+
+*Texto para aplicar merge"
