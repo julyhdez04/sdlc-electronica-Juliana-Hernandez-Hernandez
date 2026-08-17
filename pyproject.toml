@@ -19,8 +19,6 @@ testpaths = [
 [tool.ruff]
 line-length = 400
 target-version = "py310"
-select = ["E", "F", "I", "B"]
-ignore = ["B008"]
 
 [tool.ruff.lint]
 # E: Errores generales de estilo (pycodestyle)
