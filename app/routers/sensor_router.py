@@ -36,8 +36,10 @@ def update_sensor(sensor_id: int, sensor_data: SensorCreate, db: Session = Depen
 
 @router.delete("/{sensor_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_sensor(sensor_id: int, db: Session = Depends(get_db)):
+    """RF-1: en produccion no se borra, se desactiva."""
     service = SensorService(SensorRepository(db))
-    deleted = service.remove_sensor(sensor_id)
-    if not deleted:
-        raise HTTPException(status_code=404, detail="Sensor no encontrado.")
+    try:
+        service.deactivate_sensor(sensor_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail="Sensor no encontrado.") from e
     return None
