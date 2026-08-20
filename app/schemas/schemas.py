@@ -5,9 +5,14 @@ from pydantic import BaseModel, field_validator, model_validator
 
 # --- Sensores ---
 
+ABSOLUTE_ZERO_CELSIUS = -273.15
+
+
 class SensorCreate(BaseModel):
     name: str
     tipo: str
+    location: str = ""
+    threshold: float = 0.0
 
     @field_validator("tipo")
     @classmethod
@@ -19,15 +24,27 @@ class SensorCreate(BaseModel):
             raise ValueError(f"Tipo desconocido. Permitidos: {tipos_validos}")
         return v
 
+    @field_validator("threshold")
+    @classmethod
+    def validate_threshold(cls, v: float) -> float:
+        if v < ABSOLUTE_ZERO_CELSIUS:
+            raise ValueError(
+                f"threshold no puede estar por debajo del cero absoluto "
+                f"({ABSOLUTE_ZERO_CELSIUS})"
+            )
+        return v
+
 
 class SensorOut(BaseModel):
     id: int | None
     name: str | None
     tipo: str | None
+    location: str | None = None
+    threshold: float | None = None
+    is_active: bool = True
 
     class Config:
         from_attributes = True
-
 
 # --- Lecturas con validación física ---
 
