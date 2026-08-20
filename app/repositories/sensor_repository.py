@@ -38,3 +38,11 @@ class SensorRepository:
         self.db.delete(db_sensor)
         self.db.commit()
         return True
+    def deactivate(self, sensor_id: int):
+        db_sensor = self.get_by_id(sensor_id)
+        if not db_sensor:
+            return None
+        db_sensor.is_active = False
+        self.db.commit()
+        self.db.refresh(db_sensor)
+        return db_sensor

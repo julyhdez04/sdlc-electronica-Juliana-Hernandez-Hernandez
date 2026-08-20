@@ -22,3 +22,8 @@ class SensorService:
 
     def remove_sensor(self, sensor_id: int):
         return self.repository.delete(sensor_id)
+    def deactivate_sensor(self, sensor_id: int):
+        deactivated = self.repository.deactivate(sensor_id)
+        if not deactivated:
+            raise ValueError(f"El sensor no existe con ID {sensor_id}")
+        return deactivated
