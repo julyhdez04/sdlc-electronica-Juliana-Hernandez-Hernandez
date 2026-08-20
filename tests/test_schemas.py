@@ -40,3 +40,33 @@ def test_validar_fisica_rechaza_value_none():
     )
     with pytest.raises(ValueError):
         SensorReadingCreate.validar_fisica(reading)
+
+
+def test_sensor_create_acepta_location_y_threshold():
+    sensor = SensorCreate(
+        name="TEMP-01",
+        tipo="temperatura",
+        location="Bodega A",
+        threshold=50.0,
+    )
+    assert sensor.location == "Bodega A"
+    assert sensor.threshold == 50.0
+
+
+def test_sensor_create_threshold_bajo_cero_absoluto_rechazado():
+    with pytest.raises(ValidationError):
+        SensorCreate(name="TEMP-01", tipo="temperatura", location="Bodega A", threshold=-1000.0)
+
+
+def test_sensor_out_incluye_is_active():
+    from app.schemas.schemas import SensorOut
+
+    sensor_out = SensorOut(
+        id=1,
+        name="TEMP-01",
+        tipo="temperatura",
+        location="Bodega A",
+        threshold=50.0,
+        is_active=True,
+    )
+    assert sensor_out.is_active is True
