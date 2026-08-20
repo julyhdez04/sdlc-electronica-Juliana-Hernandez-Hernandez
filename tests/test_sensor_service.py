@@ -28,3 +28,18 @@ def test_list_sensors(db_session):
 
     results = service.list_sensors()
     assert len(results) == 2
+
+def test_deactivate_sensor(db_session):
+    service = SensorService(SensorRepository(db_session))
+    created = service.register_sensor(SensorCreate(name="Sensor S4", tipo="temperatura"))
+    deactivated = service.deactivate_sensor(created.id)
+    assert deactivated.is_active is False
+    # Sigue existiendo, solo inactivo
+    fetched = service.get_sensor(created.id)
+    assert fetched.is_active is False
+
+
+def test_deactivate_sensor_not_found_raises_value_error(db_session):
+    service = SensorService(SensorRepository(db_session))
+    with pytest.raises(ValueError):
+        service.deactivate_sensor(999999)

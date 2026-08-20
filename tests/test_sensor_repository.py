@@ -73,3 +73,19 @@ def test_delete_existing(db_session):
 def test_delete_not_found_returns_false(db_session):
     repo = SensorRepository(db_session)
     assert repo.delete(999999) is False
+
+def test_deactivate_existing_sensor(db_session):
+    repo = SensorRepository(db_session)
+    created = repo.create(SensorCreate(name="Sensor R6", tipo="temperatura"))
+    deactivated = repo.deactivate(created.id)
+    assert deactivated is not None
+    assert deactivated.is_active is False
+    # El sensor SIGUE existiendo (no se borro), solo esta inactivo
+    fetched = repo.get_by_id(created.id)
+    assert fetched is not None
+    assert fetched.is_active is False
+
+
+def test_deactivate_not_found_returns_none(db_session):
+    repo = SensorRepository(db_session)
+    assert repo.deactivate(999999) is None
