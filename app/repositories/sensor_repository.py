@@ -11,6 +11,9 @@ class SensorRepository:
     def get_by_id(self, sensor_id: int):
         return self.db.query(SensorModel).filter(SensorModel.id == sensor_id).first()
 
+    def get_by_name(self, name: str):
+        return self.db.query(SensorModel).filter(SensorModel.name == name).first()
+
     def get_all(self, skip: int = 0, limit: int = 100):
         return self.db.query(SensorModel).offset(skip).limit(limit).all()
 
