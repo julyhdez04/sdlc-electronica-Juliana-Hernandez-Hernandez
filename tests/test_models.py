@@ -30,3 +30,29 @@ def test_create_sensor_with_valid_data():
     sensor = SensorModel(name="sensor1", tipo="temperatura")
     assert sensor.name == "sensor1"
     assert sensor.tipo == "temperatura"
+
+def test_create_sensor_con_location_y_threshold():
+    sensor = SensorModel(
+        name="TEMP-01",
+        tipo="temperatura",
+        location="Bodega A",
+        threshold=50.0,
+    )
+    assert sensor.location == "Bodega A"
+    assert sensor.threshold == 50.0
+
+
+def test_sensor_is_active_por_defecto_true():
+    sensor = SensorModel(name="TEMP-01", tipo="temperatura", location="Bodega A", threshold=50.0)
+    assert sensor.is_active is True
+
+
+def test_sensor_se_puede_desactivar():
+    sensor = SensorModel(name="TEMP-01", tipo="temperatura", location="Bodega A", threshold=50.0)
+    sensor.is_active = False
+    assert sensor.is_active is False
+
+
+def test_sensor_threshold_invalido_lanza_error():
+    with pytest.raises(ValueError):
+        SensorModel(name="TEMP-01", tipo="temperatura", location="Bodega A", threshold=-1000.0)
