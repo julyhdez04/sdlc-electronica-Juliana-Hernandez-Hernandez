@@ -7,16 +7,27 @@ from app.db import get_db
 from app.repositories.reading_repository import ReadingRepository
 from app.schemas.schemas import SensorReadingCreate, SensorReadingOut, SensorReadingUpdate
 from app.services.reading_service import ReadingService
+from app.repositories.alert_repository import AlertRepository
+from app.repositories.sensor_repository import SensorRepository
+from app.services.alert_service import AlertService
 
 router = APIRouter(tags=["Readings"])
 
 @router.post("/sensors/{id}/readings", response_model=SensorReadingOut, status_code=status.HTTP_201_CREATED)
 def create_sensor_reading(id: str, reading: SensorReadingCreate, db: Session = Depends(get_db)):
-    service = ReadingService(ReadingRepository(db))
+    service = ReadingService(
+        ReadingRepository(db),
+        sensor_repo=SensorRepository(db),
+        alert_service=AlertService(AlertRepository(db)),
+    )
     try:
         return service.create_reading(id, reading)
     except RuntimeError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
+
+
+ 
+
 
 @router.get("/sensors/{id}/readings", response_model=list[SensorReadingOut])
 def list_sensor_readings(
