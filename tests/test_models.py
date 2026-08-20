@@ -1,6 +1,6 @@
 import pytest
 
-from app.models.models import ReadingModel, SensorModel
+from app.models.models import AlertModel, ReadingModel, SensorModel
 
 
 def test_create_reading_with_null_sensor_id():
@@ -56,3 +56,31 @@ def test_sensor_se_puede_desactivar():
 def test_sensor_threshold_invalido_lanza_error():
     with pytest.raises(ValueError):
         SensorModel(name="TEMP-01", tipo="temperatura", location="Bodega A", threshold=-1000.0)
+
+
+def test_create_alert_model_valido():
+    alert = AlertModel(
+        sensor_id="TEMP-01",
+        level="WARNING",
+        reading_value=55.0,
+    )
+    assert alert.sensor_id == "TEMP-01"
+    assert alert.level == "WARNING"
+    assert alert.reading_value == 55.0
+    assert alert.status == "OPEN"
+
+
+def test_alert_model_acknowledge():
+    alert = AlertModel(sensor_id="TEMP-01", level="WARNING", reading_value=55.0)
+    alert.status = "ACKNOWLEDGED"
+    assert alert.status == "ACKNOWLEDGED"
+
+
+def test_alert_model_status_invalido_lanza_error():
+    with pytest.raises(ValueError):
+        AlertModel(sensor_id="TEMP-01", level="WARNING", reading_value=55.0, status="INVENTADO")
+
+
+def test_alert_model_level_invalido_lanza_error():
+    with pytest.raises(ValueError):
+        AlertModel(sensor_id="TEMP-01", level="INVENTADO", reading_value=55.0)
