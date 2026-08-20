@@ -4,6 +4,8 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db import Base
 
+ABSOLUTE_ZERO_CELSIUS = -273.15
+
 
 class SensorModel(Base):
     __tablename__ = "sensors"
@@ -11,6 +13,36 @@ class SensorModel(Base):
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     name: Mapped[str] = mapped_column()
     tipo: Mapped[str] = mapped_column(index=True)
+    location: Mapped[str] = mapped_column(default="")
+    threshold: Mapped[float] = mapped_column(default=0.0)
+    is_active: Mapped[bool] = mapped_column(default=True)
+
+    def __init__(
+        self,
+        name: str,
+        tipo: str,
+        location: str = "",
+        threshold: float = 0.0,
+        is_active: bool = True,
+        id: int | None = None,
+    ):
+        if threshold < ABSOLUTE_ZERO_CELSIUS:
+            raise ValueError(
+                f"threshold no puede estar por debajo del cero absoluto "
+                f"({ABSOLUTE_ZERO_CELSIUS})"
+            )
+        if id is not None:
+            self.id = id
+        self.name = name
+        self.tipo = tipo
+        self.location = location
+        self.threshold = threshold
+        self.is_active = is_active
+
+
+
+
+
 
 
 class ReadingModel(Base):
