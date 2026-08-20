@@ -77,3 +77,37 @@ class ReadingModel(Base):
         self.value = value
         self.unit = unit
         self.created_at = created_at or datetime.utcnow()
+VALID_ALERT_LEVELS = {"WARNING", "CRITICAL"}
+VALID_ALERT_STATUSES = {"OPEN", "ACKNOWLEDGED", "RESOLVED"}
+
+
+class AlertModel(Base):
+    __tablename__ = "alerts"
+
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    sensor_id: Mapped[str] = mapped_column(index=True)
+    level: Mapped[str] = mapped_column()
+    reading_value: Mapped[float] = mapped_column()
+    status: Mapped[str] = mapped_column(default="OPEN")
+    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, nullable=False)
+
+    def __init__(
+        self,
+        sensor_id: str,
+        level: str,
+        reading_value: float,
+        status: str = "OPEN",
+        id: int | None = None,
+        created_at: datetime | None = None,
+    ):
+        if level not in VALID_ALERT_LEVELS:
+            raise ValueError(f"level inválido. Permitidos: {VALID_ALERT_LEVELS}")
+        if status not in VALID_ALERT_STATUSES:
+            raise ValueError(f"status inválido. Permitidos: {VALID_ALERT_STATUSES}")
+        if id is not None:
+            self.id = id
+        self.sensor_id = sensor_id
+        self.level = level
+        self.reading_value = reading_value
+        self.status = status
+        self.created_at = created_at or datetime.utcnow()
