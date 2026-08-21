@@ -84,3 +84,16 @@ def test_alert_model_status_invalido_lanza_error():
 def test_alert_model_level_invalido_lanza_error():
     with pytest.raises(ValueError):
         AlertModel(sensor_id="TEMP-01", level="INVENTADO", reading_value=55.0)
+
+
+def test_reading_model_created_at_es_naive_datetime():
+    """Verifica que created_at sigue siendo naive (sin tzinfo) tras la
+    migracion de datetime.utcnow() deprecado, para no romper comparaciones
+    con el resto del sistema que asume naive UTC."""
+    reading = ReadingModel(sensor_id="sensor1", tipo_sensor="temperatura", value=25.0, unit="°C")
+    assert reading.created_at.tzinfo is None
+
+
+def test_alert_model_created_at_es_naive_datetime():
+    alert = AlertModel(sensor_id="TEMP-01", level="WARNING", reading_value=55.0)
+    assert alert.created_at.tzinfo is None
