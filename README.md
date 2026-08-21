@@ -58,3 +58,63 @@ La aplicación se encuentra desplegada de forma continua en Render mediante Infr
 * **URL Pública de la API:** [https://sensorhub-api-cbtj.onrender.com](https://sensorhub-api-cbtj.onrender.com)
 * **Documentación Interactiva (Swagger UI):** [https://sensorhub-api-cbtj.onrender.com/docs](https://sensorhub-api-cbtj.onrender.com/docs)
 * **Endpoint de Salud (Health Check):** [https://sensorhub-api-cbtj.onrender.com/health](https://sensorhub-api-cbtj.onrender.com/health)
+
+## Arquitectura de SensorHub
+
+API REST en capas construida con FastAPI + SQLAlchemy 2.x, siguiendo el patrón repositorio y DIP:
+
+```
+app/
+  domain/       # entidades de dominio puras (Sensor, Reading, Alert) - sin FastAPI ni BD
+  models/       # modelos ORM (SQLAlchemy)
+  schemas/      # esquemas Pydantic (entrada/salida)
+  repositories/ # acceso a datos, única capa que toca la BD
+  services/     # logica de negocio, depende de abstracciones (Protocol)
+  routers/      # capa de presentacion (HTTP)
+  main.py       # FastAPI app + manejo global de errores
+migrations/     # migraciones de Alembic
+```
+
+### Requisitos funcionales implementados
+
+| RF | Endpoint(s) | Descripción |
+|---|---|---|
+| RF-1 | `POST/GET/PUT/DELETE /sensors/` | CRUD de sensores. `DELETE` desactiva (`is_active=false`), no borra. |
+| RF-2 | `POST /sensors/{id}/readings` | Ingesta de lecturas con validación física por tipo de sensor. |
+| RF-3 | `GET /sensors/{id}/readings` | Consulta con paginación (`limit`/`offset`) y filtro por fechas (`from`/`to`). |
+| RF-4 | (automático al crear lectura) | Detección de anomalías: evalúa contra el umbral del sensor y genera alerta (WARNING/CRITICAL). |
+| RF-5 | `GET/PATCH /alerts/` | Consulta de alertas abiertas y cambio de estado (`open`→`acknowledged`→`resolved`). |
+| RF-6 | `GET /sensors/{id}/readings/stats` | Estadísticas (mínimo, máximo, promedio) por sensor y periodo. |
+| RF-7 | `GET /health`, `GET /metrics` | Salud del servicio y métricas básicas de observabilidad. |
+
+## Desarrollo local con Docker Compose
+
+Levanta la API + PostgreSQL con un solo comando:
+
+```bash
+docker compose up --build
+```
+
+Esto construye la imagen, espera a que PostgreSQL esté saludable (`healthcheck`), corre las migraciones de Alembic automáticamente (`alembic upgrade head`) y arranca el servidor en `http://localhost:8000`.
+
+Para detener y limpiar:
+
+```bash
+docker compose down       # detiene los contenedores
+docker compose down -v    # detiene y borra tambien el volumen de datos
+```
+
+## Migraciones (Alembic)
+
+El esquema de base de datos se gestiona con Alembic, no con `create_all()`:
+
+```bash
+alembic revision --autogenerate -m "descripcion del cambio"  # generar nueva migracion
+alembic upgrade head                                          # aplicar migraciones pendientes
+```
+
+En producción y en Docker, las migraciones se ejecutan automáticamente antes de arrancar el servidor (ver `Dockerfile`), evitando que la API reciba tráfico contra un esquema desactualizado.
+
+## Manejo de errores
+
+La API captura cualquier excepción no controlada mediante un `exception_handler` global (`app/main.py`): responde `500` con un mensaje genérico al cliente, sin filtrar detalles internos (stack traces, mensajes de excepciones de Python), mientras registra el error completo en logs del servidor para diagnóstico.
