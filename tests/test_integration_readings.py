@@ -234,7 +234,13 @@ def test_metrics_endpoint():
 
 def test_error_no_controlado_devuelve_500_sin_traceback():
     """Manejo global de errores: una excepcion inesperada no debe filtrar
-    stack traces al cliente, debe responder 500 con JSON limpio."""
+    stack traces al cliente, debe responder 500 con JSON limpio.
+
+    Usa un TestClient con raise_server_exceptions=False porque el TestClient
+    por defecto re-lanza las excepciones del servidor para debugging, incluso
+    cuando hay un exception_handler registrado (esto NO ocurre en produccion
+    real, solo es un comportamiento de testing).
+    """
     from app.db import get_db
     from tests.conftest import override_get_db
 
@@ -246,8 +252,9 @@ def test_error_no_controlado_devuelve_500_sin_traceback():
         yield BrokenSessionGeneric()
 
     app.dependency_overrides[get_db] = broken_get_db
+    error_client = TestClient(app, raise_server_exceptions=False)
     try:
-        response = client.get("/sensors/")
+        response = error_client.get("/sensors/")
         assert response.status_code == 500
         data = response.json()
         assert "detail" in data
