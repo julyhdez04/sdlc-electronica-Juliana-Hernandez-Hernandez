@@ -220,3 +220,13 @@ def test_get_sensor_stats_sin_lecturas():
     assert response.status_code == 200
     data = response.json()
     assert data["count"] == 0
+
+
+def test_metrics_endpoint():
+    response = client.get("/metrics")
+    assert response.status_code == 200
+    data = response.json()
+    assert "total_sensors" in data
+    assert "total_readings" in data
+    assert "open_alerts" in data
+    assert isinstance(data["total_sensors"], int)
