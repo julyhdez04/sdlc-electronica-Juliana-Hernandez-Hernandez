@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.models.models import ReadingModel
@@ -61,3 +62,28 @@ class ReadingRepository:
         self.db.delete(db_reading)
         self.db.commit()
         return True
+    def get_stats(
+        self,
+        sensor_id: str,
+        date_from: datetime | None = None,
+        date_to: datetime | None = None,
+    ):
+        query = self.db.query(
+            func.min(ReadingModel.value),
+            func.max(ReadingModel.value),
+            func.avg(ReadingModel.value),
+            func.count(ReadingModel.id),
+        ).filter(ReadingModel.sensor_id == sensor_id)
+
+        if date_from:
+            query = query.filter(ReadingModel.created_at >= date_from)
+        if date_to:
+            query = query.filter(ReadingModel.created_at <= date_to)
+
+        min_val, max_val, avg_val, count = query.one()
+        return {
+            "min": min_val,
+            "max": max_val,
+            "avg": avg_val,
+            "count": count or 0,
+        }
