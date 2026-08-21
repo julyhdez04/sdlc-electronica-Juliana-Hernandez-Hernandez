@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from app.domain.reading import AlertLevel, Reading as DomainReading
+from app.domain.reading import AlertLevel
 from app.schemas.schemas import SensorReadingCreate, SensorReadingUpdate
 
 

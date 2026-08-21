@@ -9,6 +9,7 @@ from sqlalchemy import engine_from_config, pool
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from app.db import DATABASE_URL, Base
+
 # Importa los modelos para que se registren en Base.metadata
 from app.models.models import AlertModel, ReadingModel, SensorModel  # noqa: F401
 

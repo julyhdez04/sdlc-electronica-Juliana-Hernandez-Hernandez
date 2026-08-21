@@ -2,8 +2,8 @@ from datetime import datetime, timezone
 
 import pytest
 
-from app.domain.sensor import Sensor, SensorType
 from app.domain.reading import AlertLevel, Reading
+from app.domain.sensor import Sensor, SensorType
 
 
 def _sensor_temperatura(threshold: float = 50.0) -> Sensor:

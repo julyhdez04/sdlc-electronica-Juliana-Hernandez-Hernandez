@@ -1,6 +1,4 @@
-import pytest
 
-from app.models.models import AlertModel
 from app.repositories.alert_repository import AlertRepository
 
 

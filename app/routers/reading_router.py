@@ -4,17 +4,17 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.db import get_db
+from app.repositories.alert_repository import AlertRepository
 from app.repositories.reading_repository import ReadingRepository
+from app.repositories.sensor_repository import SensorRepository
 from app.schemas.schemas import (
     ReadingStatsOut,
     SensorReadingCreate,
     SensorReadingOut,
     SensorReadingUpdate,
 )
-from app.services.reading_service import ReadingService
-from app.repositories.alert_repository import AlertRepository
-from app.repositories.sensor_repository import SensorRepository
 from app.services.alert_service import AlertService
+from app.services.reading_service import ReadingService
 
 router = APIRouter(tags=["Readings"])
 
