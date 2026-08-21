@@ -196,3 +196,27 @@ def test_create_reading_handles_unexpected_db_error():
         assert "Error creating sensor reading" in response.json()["detail"]
     finally:
         app.dependency_overrides[get_db] = override_get_db
+
+def test_get_sensor_stats_endpoint():
+    client.post("/sensors/sensor_stats/readings", json={
+        "tipo_sensor": "temperatura", "value": 10.0, "unit": "°C"
+    })
+    client.post("/sensors/sensor_stats/readings", json={
+        "tipo_sensor": "temperatura", "value": 30.0, "unit": "°C"
+    })
+
+    response = client.get("/sensors/sensor_stats/readings/stats")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["min"] == 10.0
+    assert data["max"] == 30.0
+    assert data["avg"] == 20.0
+    assert data["count"] == 2
+
+
+def test_get_sensor_stats_sin_lecturas():
+    response = client.get("/sensors/sensor_stats_vacio/readings/stats")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["count"] == 0
