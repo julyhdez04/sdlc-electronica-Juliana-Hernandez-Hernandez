@@ -118,3 +118,45 @@ En producción y en Docker, las migraciones se ejecutan automáticamente antes d
 ## Manejo de errores
 
 La API captura cualquier excepción no controlada mediante un `exception_handler` global (`app/main.py`): responde `500` con un mensaje genérico al cliente, sin filtrar detalles internos (stack traces, mensajes de excepciones de Python), mientras registra el error completo en logs del servidor para diagnóstico.
+
+## Diagrama de Arquitectura
+
+```mermaid
+flowchart TB
+    subgraph Cliente
+        C[Cliente HTTP / Swagger UI]
+    end
+
+    subgraph API["SensorHub API (FastAPI)"]
+        direction TB
+        R[Routers<br/>sensor_router · reading_router · alert_router]
+        S[Services<br/>sensor_service · reading_service · alert_service · anomaly_service]
+        RP[Repositories<br/>sensor_repository · reading_repository · alert_repository]
+        M[Models ORM<br/>SensorModel · ReadingModel · AlertModel]
+        D[Domain puro<br/>Sensor · Reading · Alert]
+        EH[Exception Handler global]
+    end
+
+    subgraph Infra["Infraestructura"]
+        DB[(PostgreSQL)]
+        AL[Alembic<br/>migraciones]
+    end
+
+    C -->|HTTP request| R
+    R --> S
+    S -.->|Protocol / DIP| RP
+    S -.-> D
+    RP --> M
+    M --> DB
+    AL -->|upgrade head al arrancar| DB
+    R -.->|error no controlado| EH
+    EH -->|500 JSON limpio| C
+
+    style D fill:#e8f5e9,stroke:#2e7d32
+    style EH fill:#fff3e0,stroke:#e65100
+    style DB fill:#e3f2fd,stroke:#1565c0
+```
+
+**Flujo de una petición:** el cliente llama a un endpoint → el router recibe el HTTP y delega al servicio correspondiente → el servicio aplica las reglas de negocio (apoyándose en las entidades de dominio puras para validación y detección de anomalías) → el servicio depende de una *abstracción* del repositorio (Dependency Inversion Principle), nunca de SQLAlchemy directamente → el repositorio es la única capa que toca la base de datos vía los modelos ORM.
+
+Cualquier excepción no controlada en cualquier capa es capturada por el *exception handler* global antes de llegar al cliente, evitando filtrar detalles internos.
