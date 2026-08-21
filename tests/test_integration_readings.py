@@ -230,3 +230,29 @@ def test_metrics_endpoint():
     assert "total_readings" in data
     assert "open_alerts" in data
     assert isinstance(data["total_sensors"], int)
+
+
+def test_error_no_controlado_devuelve_500_sin_traceback():
+    """Manejo global de errores: una excepcion inesperada no debe filtrar
+    stack traces al cliente, debe responder 500 con JSON limpio."""
+    from app.db import get_db
+    from tests.conftest import override_get_db
+
+    class BrokenSessionGeneric:
+        def query(self, *args, **kwargs):
+            raise RuntimeError("Fallo interno inesperado y no controlado")
+
+    def broken_get_db():
+        yield BrokenSessionGeneric()
+
+    app.dependency_overrides[get_db] = broken_get_db
+    try:
+        response = client.get("/sensors/")
+        assert response.status_code == 500
+        data = response.json()
+        assert "detail" in data
+        # No debe filtrar detalles internos como el traceback o el mensaje exacto de Python
+        assert "RuntimeError" not in data["detail"]
+        assert "Traceback" not in data["detail"]
+    finally:
+        app.dependency_overrides[get_db] = override_get_db
