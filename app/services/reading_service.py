@@ -10,6 +10,14 @@ class ReadingService:
         self.sensor_repo = sensor_repo
         self.alert_service = alert_service
 
+    def get_stats(
+        self,
+        sensor_id: str,
+        date_from: datetime | None = None,
+        date_to: datetime | None = None,
+    ):
+        return self.repository.get_stats(sensor_id, date_from=date_from, date_to=date_to)
+
     def create_reading(self, sensor_id: str, reading_data: SensorReadingCreate):
         try:
             reading = self.repository.create(

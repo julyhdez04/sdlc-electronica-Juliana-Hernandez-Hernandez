@@ -108,3 +108,8 @@ class SensorReadingOut(BaseModel):
 
     class Config:
         from_attributes = True
+class ReadingStatsOut(BaseModel):
+    min: float | None
+    max: float | None
+    avg: float | None
+    count: int

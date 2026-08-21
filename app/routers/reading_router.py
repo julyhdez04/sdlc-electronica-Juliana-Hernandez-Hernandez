@@ -5,7 +5,12 @@ from sqlalchemy.orm import Session
 
 from app.db import get_db
 from app.repositories.reading_repository import ReadingRepository
-from app.schemas.schemas import SensorReadingCreate, SensorReadingOut, SensorReadingUpdate
+from app.schemas.schemas import (
+    ReadingStatsOut,
+    SensorReadingCreate,
+    SensorReadingOut,
+    SensorReadingUpdate,
+)
 from app.services.reading_service import ReadingService
 from app.repositories.alert_repository import AlertRepository
 from app.repositories.sensor_repository import SensorRepository
@@ -68,3 +73,12 @@ def delete_reading(id: int, db: Session = Depends(get_db)):
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
     return None
+@router.get("/sensors/{id}/readings/stats", response_model=ReadingStatsOut)
+def get_sensor_reading_stats(
+    id: str,
+    date_from: datetime | None = Query(None, alias="from"),
+    date_to: datetime | None = Query(None, alias="to"),
+    db: Session = Depends(get_db),
+):
+    service = ReadingService(ReadingRepository(db))
+    return service.get_stats(id, date_from=date_from, date_to=date_to)
