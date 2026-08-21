@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import func
 from sqlalchemy.orm import Session
@@ -16,7 +16,7 @@ class ReadingRepository:
             tipo_sensor=tipo_sensor,
             value=value,
             unit=unit,
-            created_at=datetime.utcnow(),
+            created_at=datetime.now(timezone.utc).replace(tzinfo=None),
         )
         try:
             self.db.add(db_reading)

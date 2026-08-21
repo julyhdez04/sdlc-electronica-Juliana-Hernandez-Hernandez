@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -53,7 +53,7 @@ class ReadingModel(Base):
     tipo_sensor: Mapped[str] = mapped_column()
     value: Mapped[float] = mapped_column()
     unit: Mapped[str] = mapped_column()
-    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), nullable=False)
 
     def __init__(
         self,
@@ -76,7 +76,7 @@ class ReadingModel(Base):
         self.tipo_sensor = tipo_sensor
         self.value = value
         self.unit = unit
-        self.created_at = created_at or datetime.utcnow()
+        self.created_at = created_at or datetime.now(timezone.utc).replace(tzinfo=None)
 VALID_ALERT_LEVELS = {"WARNING", "CRITICAL"}
 VALID_ALERT_STATUSES = {"OPEN", "ACKNOWLEDGED", "RESOLVED"}
 
@@ -89,7 +89,7 @@ class AlertModel(Base):
     level: Mapped[str] = mapped_column()
     reading_value: Mapped[float] = mapped_column()
     status: Mapped[str] = mapped_column(default="OPEN")
-    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), nullable=False)
 
     def __init__(
         self,
@@ -110,4 +110,4 @@ class AlertModel(Base):
         self.level = level
         self.reading_value = reading_value
         self.status = status
-        self.created_at = created_at or datetime.utcnow()
+        self.created_at = created_at or datetime.now(timezone.utc).replace(tzinfo=None)
